@@ -4,26 +4,29 @@ import java.util.List;
 
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.Database;
+import jmyzik.librarymanager.query.MainFrameQuery;
 
 public class MainFrameService {
 	
+	MainFrameQuery query;
+	
 	public MainFrameService() {
+		query = new MainFrameQuery();
 	}
 	
 	public List<Book> getAllBooks() {
-		return Database.INSTANCE.getAllBooks();
+		return query.getAllBooks();
 	}
 	
 	public List<Reader> getAllReaders() {
-		return Database.INSTANCE.getAllReaders();
+		return query.getAllReaders();
 	}
 	
 	public boolean removeBook(Book book) {
-		return Database.INSTANCE.removeBook(book);
+		return query.removeBook(book);
 	}
 
 	public boolean removeReader(Reader reader) {
-		return Database.INSTANCE.removeReader(reader);
+		return query.removeReader(reader);
 	}
 }

@@ -1,11 +1,17 @@
 package jmyzik.librarymanager.service;
 
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.Database;
+import jmyzik.librarymanager.query.AddReaderFormQuery;
 
 public class AddReaderFormService {
+	
+	AddReaderFormQuery query;
+	
+	public AddReaderFormService() {
+		query = new AddReaderFormQuery();
+	}
 
 	public void addReader(Reader reader) {
-		Database.INSTANCE.addReader(reader);
+		query.addReader(reader);
 	}
 }
