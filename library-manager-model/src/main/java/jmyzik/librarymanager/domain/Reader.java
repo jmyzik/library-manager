@@ -3,14 +3,14 @@ package jmyzik.librarymanager.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.GenerationType;
 
 @Entity
 public class Reader {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO) 
 	private long id;
-//	private String cardNumber;
 	private String firstName;
 	private String lastName;
 	private String address;
@@ -25,10 +25,6 @@ public class Reader {
 
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {

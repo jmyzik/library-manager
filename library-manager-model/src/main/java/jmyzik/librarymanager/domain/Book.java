@@ -3,12 +3,20 @@ package jmyzik.librarymanager.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.GenerationType;
 
 @Entity
 public class Book {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@TableGenerator(name = "mojGenerator", 
+//		table = "tabela_z_identyfikatorami",
+//		pkColumnName = "nazwa_sekwencji",
+//		valueColumnName = "wartosc_identyfikatora",
+//		pkColumnValue = "id_pracownika",
+//		initialValue = 50,
+//		allocationSize = 15)
 	private long id;
 	private String title;
 	private String author;
@@ -26,10 +34,6 @@ public class Book {
 
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {		// TODO Should I leave that it its auto-generated?
-		this.id = id;
 	}
 
 	public String getTitle() {

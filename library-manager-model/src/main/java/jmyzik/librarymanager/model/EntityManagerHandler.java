@@ -5,13 +5,30 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.hibernate.service.spi.ServiceException;
+
 public enum EntityManagerHandler {
 	INSTANCE;
 
-	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("library-database");
-	private EntityManager entityManager = entityManagerFactory.createEntityManager();
-	private EntityTransaction entityTransaction = entityManager.getTransaction();
+	private EntityManagerFactory entityManagerFactory;
+	private EntityManager entityManager;
+	private EntityTransaction entityTransaction;
 
+	private EntityManagerHandler() {
+		try {
+			entityManagerFactory = Persistence.createEntityManagerFactory("library-database");
+			entityManager = entityManagerFactory.createEntityManager();
+			entityTransaction = entityManager.getTransaction();
+		} catch (ServiceException e) {
+			System.out.println("*********************************************");
+			System.out.println("B£¥D!!!!!!!!!!!!!!!!!!!!!!!!");
+			System.out.println("Message: " + e.getMessage());
+			System.out.println("Cause: " + e.getCause());
+			System.out.println("Class: " + e.getClass());
+			System.out.println("*********************************************");
+		}
+	}
+	
 	public void open()  {
 		if (!entityTransaction.isActive()) {
 			entityTransaction.begin();
