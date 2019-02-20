@@ -126,7 +126,7 @@ public class AddReaderForm extends JDialog implements ActionListener {
 				return;
 			}
 			
-			Reader newReader = new Reader(99, firstName, lastName, address);	// TODO: set automatic ID!
+			Reader newReader = new Reader(firstName, lastName, address);
 
 			addReaderFormService.addReader(newReader);
 			readerTableChangedCallback.readerTableChanged();

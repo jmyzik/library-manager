@@ -14,9 +14,10 @@ public class Book {
 	private String author;
 	private String publisher;
 	private int publicationYear;
+	
+	public Book() {}
 
-	public Book(long id, String title, String author, String publisher, int publicationYear) {
-		this.id = id;
+	public Book(String title, String author, String publisher, int publicationYear) {
 		this.title = title;
 		this.author = author;
 		this.publisher = publisher;
@@ -27,7 +28,7 @@ public class Book {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(long id) {		// TODO Should I leave that it its auto-generated?
 		this.id = id;
 	}
 

@@ -136,7 +136,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 				return;
 			}
 			
-			Book newBook = new Book(99, title, author, publisher, publicationYear);	// TODO: set automatic ID!
+			Book newBook = new Book(title, author, publisher, publicationYear);
 
 			addBookFormService.addBook(newBook);
 			bookTableChangedCallback.bookTableChanged();
