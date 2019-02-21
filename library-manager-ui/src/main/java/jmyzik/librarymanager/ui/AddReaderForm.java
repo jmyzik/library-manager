@@ -20,6 +20,7 @@ import javax.swing.border.Border;
 
 import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Reader;
+import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.service.AddReaderFormService;
 
 public class AddReaderForm extends JDialog implements ActionListener {
@@ -128,7 +129,11 @@ public class AddReaderForm extends JDialog implements ActionListener {
 			
 			Reader newReader = new Reader(firstName, lastName, address);
 
-			addReaderFormService.addReader(newReader);
+			try {
+				addReaderFormService.addReader(newReader);
+			} catch (DatabaseUnavailableException e) {
+				System.out.println("B³¹d bazy danych!!!");
+			}
 			readerTableChangedCallback.readerTableChanged();
 			setVisible(false);
 		}

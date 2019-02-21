@@ -3,20 +3,14 @@ package jmyzik.librarymanager.query;
 import java.util.ArrayList;
 
 import jmyzik.librarymanager.domain.Book;
+import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
 
 public class AddBookFormQuery extends AbstractQuery {
 
-	public AddBookFormQuery() {
-
-	}
-	
-	public void addBook(Book book) {
-		if (!entityManagerHandler.isAvailable()) {
-			return;
-		}
+	public void addBook(Book book) throws DatabaseUnavailableException {
 		open();
-		EntityManagerHandler.INSTANCE.getEntityManager().persist(book);
-		EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
+		entityManagerHandler.getEntityManager().persist(book);
+		entityManagerHandler.getEntityTransaction().commit();
 	}
 }

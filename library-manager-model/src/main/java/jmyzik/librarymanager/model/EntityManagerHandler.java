@@ -16,6 +16,10 @@ public enum EntityManagerHandler {
 	private boolean isAvailable = false;
 
 	private EntityManagerHandler() {
+		connectToDatabase();
+	}
+
+	public boolean connectToDatabase() {
 		try {
 			entityManagerFactory = Persistence.createEntityManagerFactory("library-database");
 			entityManager = entityManagerFactory.createEntityManager();
@@ -24,6 +28,7 @@ public enum EntityManagerHandler {
 		} catch (Exception e) {
 			isAvailable = false;
 		}
+		return isAvailable;
 	}
 	
 	public void open()  {

@@ -20,6 +20,7 @@ import javax.swing.border.Border;
 
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
+import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.service.AddBookFormService;
 
 public class AddBookForm extends JDialog implements ActionListener {
@@ -138,7 +139,11 @@ public class AddBookForm extends JDialog implements ActionListener {
 			
 			Book newBook = new Book(title, author, publisher, publicationYear);
 
-			addBookFormService.addBook(newBook);
+			try {
+				addBookFormService.addBook(newBook);
+			} catch (DatabaseUnavailableException e) {
+				System.out.println("B³¹d bazy danych!!!");
+			}
 			bookTableChangedCallback.bookTableChanged();
 			setVisible(false);
 		}

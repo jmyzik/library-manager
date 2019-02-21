@@ -3,6 +3,7 @@ package jmyzik.librarymanager.ui;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.Reader;
+import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.service.MainFrameService;
 
 public class MainFrame extends JFrame implements BookTableChangedCallback, ReaderTableChangedCallback {
@@ -56,7 +58,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 
 	private void constructLayout() {
 		setJMenuBar(createMenuBar());
-		
+
 		tabbedPane.addTab("Ksi¹¿ki", bookTablePanel);
 		updateBookTable();
 		tabbedPane.addTab("Czytelnicy", readerTablePanel);
@@ -104,12 +106,24 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	}
 
 	private void updateBookTable() {
-		List<Book> bookList = mainFrameService.getAllBooks();
+		List<Book> bookList;
+		try {
+			bookList = mainFrameService.getAllBooks();
+		} catch (DatabaseUnavailableException e) {
+			System.out.println("B³¹d po³¹czenia z baz¹ danych!!!");
+			bookList = new ArrayList<Book>();
+		}
 		bookTablePanel.displayBooks(bookList);
 	}
 
 	private void updateReaderTable() {
-		List<Reader> readerList = mainFrameService.getAllReaders();
+		List<Reader> readerList;
+		try {
+			readerList = mainFrameService.getAllReaders();
+		} catch (DatabaseUnavailableException e) {
+			System.out.println("B³¹d po³¹czenia z baz¹ danych!!!");
+			readerList = new ArrayList<Reader>();
+		}
 		readerTablePanel.displayReaders(readerList);
 	}
 
@@ -125,81 +139,72 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 
 	private void closeApp() {
 		Object[] options = { "Tak", "Nie" };
-		int result = JOptionPane.showOptionDialog(
-				this,
-				"Czy na pewno chcesz zamkn¹æ program?",
-				"PotwierdŸ zamkniêcie",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
+		int result = JOptionPane.showOptionDialog(this, "Czy na pewno chcesz zamkn¹æ program?", "PotwierdŸ zamkniêcie",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		if (result == JOptionPane.YES_OPTION) {
 			System.exit(0);
 		}
 	}
-	
+
 	private void removeSelectedBook() {
 		Book book = bookTablePanel.getSelectedBook();
 		if (book == null) {
-			JOptionPane.showMessageDialog(this,
-					"Zaznacz ksi¹¿kê, któr¹ chcesz usun¹æ",
-					"Brak zaznaczenia",
+			JOptionPane.showMessageDialog(this, "Zaznacz ksi¹¿kê, któr¹ chcesz usun¹æ", "Brak zaznaczenia",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		
+
 		Object[] options = { "Tak", "Nie" };
-		int result = JOptionPane.showOptionDialog(
-				this,
-				"Czy na pewno chcesz usun¹æ ksi¹¿kê \"" + book.getTitle() + "\" z bazy danych?",
-				"PotwierdŸ",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
+		int result = JOptionPane.showOptionDialog(this,
+				"Czy na pewno chcesz usun¹æ ksi¹¿kê \"" + book.getTitle() + "\" z bazy danych?", "PotwierdŸ",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		if (result == JOptionPane.YES_OPTION) {
-			boolean success = mainFrameService.removeBook(book);
+			boolean success;
+			try {
+				success = mainFrameService.removeBook(book);
+			} catch (DatabaseUnavailableException e) {
+				System.out.println("B³¹d bazy danych!!!");
+				success = false;
+			}
 			bookTableChanged();
 			if (!success) {
 				JOptionPane.showMessageDialog(this,
 						"Wyst¹pi³ b³¹d, nie uda³o siê usun¹æ ksi¹¿ki \"" + book.getTitle() + "\" z bazy danych.",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
+						"B³¹d", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
 	private void removeSelectedReader() {
 		Reader reader = readerTablePanel.getSelectedReader();
-		
+
 		if (reader == null) {
-			JOptionPane.showMessageDialog(this,
-					"Zaznacz czytelnika, którego chcesz usun¹æ",
-					"Brak zaznaczenia",
+			JOptionPane.showMessageDialog(this, "Zaznacz czytelnika, którego chcesz usun¹æ", "Brak zaznaczenia",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		
+
 		Object[] options = { "Tak", "Nie" };
-		int result = JOptionPane.showOptionDialog(
-				this,
-				"Czy na pewno chcesz usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych?",
-				"PotwierdŸ usuniêcie czytelnika",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
+		int result = JOptionPane.showOptionDialog(this,
+				"Czy na pewno chcesz usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName()
+				+ " z bazy danych?",
+				"PotwierdŸ usuniêcie czytelnika", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				options, options[0]);
 		if (result == JOptionPane.YES_OPTION) {
-			boolean success = mainFrameService.removeReader(reader);
+			boolean success;
+			try {
+
+				success = mainFrameService.removeReader(reader);
+			} catch (DatabaseUnavailableException e) {
+				System.out.println("B³¹d bazy danych!!!");
+				success = false;
+			}
+
 			readerTableChanged();
 			if (!success) {
 				JOptionPane.showMessageDialog(this,
 						"B³¹d, nie uda³o siê usun¹æ czytelnika \" + reader.getFirstName() + \" \" + reader.getLastName() + \" z bazy danych.",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
+						"B³¹d", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
