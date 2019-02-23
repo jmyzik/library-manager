@@ -9,7 +9,7 @@ import jmyzik.librarymanager.query.MainFrameQuery;
 
 public class MainFrameService {
 	
-	MainFrameQuery query;
+	private MainFrameQuery query;
 	
 	public MainFrameService() {
 		query = new MainFrameQuery();
@@ -29,5 +29,9 @@ public class MainFrameService {
 
 	public boolean removeReader(Reader reader) throws DatabaseUnavailableException {
 		return query.removeReader(reader);
+	}
+
+	public boolean restartConnection() {
+		return query.restartConnection();
 	}
 }

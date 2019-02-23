@@ -28,15 +28,21 @@ public class MainFrameQuery extends AbstractQuery {
 
 	public boolean removeReader(Reader reader) throws DatabaseUnavailableException {
 		open();
-		entityManagerHandler.getEntityManager().remove(reader);
-		entityManagerHandler.getEntityTransaction().commit();
-		return true;	// TODO: just a temporary fix, should return "false" if it was impossible to remove the reader
+		if (entityManagerHandler.getEntityManager().contains(reader)) {
+			entityManagerHandler.getEntityManager().remove(reader);
+			entityManagerHandler.getEntityTransaction().commit();
+			return true;
+		}
+		return false;
 	}
 
 	public boolean removeBook(Book book) throws DatabaseUnavailableException {
 		open();
-		entityManagerHandler.getEntityManager().remove(book);
-		entityManagerHandler.getEntityTransaction().commit();
-		return true;	// TODO: just a temporary fix, should return "false" if it was impossible to remove the book
+		if (entityManagerHandler.getEntityManager().contains(book)) {
+			entityManagerHandler.getEntityManager().remove(book);
+			entityManagerHandler.getEntityTransaction().commit();
+			return true;
+		}
+		return false;
 	}
 }

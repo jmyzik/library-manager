@@ -128,13 +128,16 @@ public class AddReaderForm extends JDialog implements ActionListener {
 			}
 			
 			Reader newReader = new Reader(firstName, lastName, address);
-
+			
 			try {
 				addReaderFormService.addReader(newReader);
+				readerTableChangedCallback.readerTableChanged();
 			} catch (DatabaseUnavailableException e) {
-				System.out.println("B³¹d bazy danych!!!");
+				JOptionPane.showMessageDialog(this,
+						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
 			}
-			readerTableChangedCallback.readerTableChanged();
 			setVisible(false);
 		}
 	}

@@ -1,16 +1,20 @@
 package jmyzik.librarymanager.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
@@ -22,6 +26,8 @@ import jmyzik.librarymanager.service.MainFrameService;
 
 public class MainFrame extends JFrame implements BookTableChangedCallback, ReaderTableChangedCallback {
 
+	private JPanel buttonPanel;
+	private JButton refreshButton;
 	private JTabbedPane tabbedPane;
 	private BookTablePanel bookTablePanel;
 	private ReaderTablePanel readerTablePanel;
@@ -37,9 +43,12 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		constructLayout();
 		addListeners();
 		setCallbacks();
+		connectAndUpdate();
 	}
 
 	private void initializeVariables() {
+		buttonPanel = new JPanel();
+		refreshButton = new JButton("Odœwie¿");
 		tabbedPane = new JTabbedPane();
 		bookTablePanel = new BookTablePanel();
 		readerTablePanel = new ReaderTablePanel();
@@ -59,11 +68,15 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	private void constructLayout() {
 		setJMenuBar(createMenuBar());
 
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel.add(refreshButton);
+		
 		tabbedPane.addTab("Ksi¹¿ki", bookTablePanel);
-		updateBookTable();
 		tabbedPane.addTab("Czytelnicy", readerTablePanel);
-		updateReaderTable();
-		add(tabbedPane);
+
+		setLayout(new BorderLayout());
+		add(buttonPanel, BorderLayout.NORTH);
+		add(tabbedPane, BorderLayout.CENTER);
 	}
 
 	private JMenuBar createMenuBar() {
@@ -98,6 +111,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 				closeApp();
 			}
 		});
+		refreshButton.addActionListener(l -> connectAndUpdate());
 	}
 
 	private void setCallbacks() {
@@ -106,24 +120,30 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	}
 
 	private void updateBookTable() {
-		List<Book> bookList;
+		List<Book> bookList = new ArrayList<Book>();
 		try {
 			bookList = mainFrameService.getAllBooks();
 		} catch (DatabaseUnavailableException e) {
-			System.out.println("B³¹d po³¹czenia z baz¹ danych!!!");
-			bookList = new ArrayList<Book>();
-		}
+			JOptionPane.showMessageDialog(this,
+					"Wyst¹pi³ problem z baz¹ danych.\n" +
+							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
+		} 
 		bookTablePanel.displayBooks(bookList);
 	}
 
 	private void updateReaderTable() {
-		List<Reader> readerList;
+		List<Reader> readerList = new ArrayList<Reader>();
 		try {
 			readerList = mainFrameService.getAllReaders();
 		} catch (DatabaseUnavailableException e) {
-			System.out.println("B³¹d po³¹czenia z baz¹ danych!!!");
-			readerList = new ArrayList<Reader>();
-		}
+			JOptionPane.showMessageDialog(this,
+					"Wyst¹pi³ problem z baz¹ danych.\n" +
+							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
+		} 
 		readerTablePanel.displayReaders(readerList);
 	}
 
@@ -139,8 +159,14 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 
 	private void closeApp() {
 		Object[] options = { "Tak", "Nie" };
-		int result = JOptionPane.showOptionDialog(this, "Czy na pewno chcesz zamkn¹æ program?", "PotwierdŸ zamkniêcie",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		int result = JOptionPane.showOptionDialog(this,
+				"Czy na pewno chcesz zamkn¹æ program?",
+				"PotwierdŸ zamkniêcie",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
 			System.exit(0);
 		}
@@ -149,28 +175,39 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	private void removeSelectedBook() {
 		Book book = bookTablePanel.getSelectedBook();
 		if (book == null) {
-			JOptionPane.showMessageDialog(this, "Zaznacz ksi¹¿kê, któr¹ chcesz usun¹æ", "Brak zaznaczenia",
+			JOptionPane.showMessageDialog(this,
+					"Zaznacz ksi¹¿kê, któr¹ chcesz usun¹æ",
+					"Brak zaznaczenia",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 
-		Object[] options = { "Tak", "Nie" };
+		String[] options = { "Tak", "Nie" };
 		int result = JOptionPane.showOptionDialog(this,
-				"Czy na pewno chcesz usun¹æ ksi¹¿kê \"" + book.getTitle() + "\" z bazy danych?", "PotwierdŸ",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				"Czy na pewno chcesz usun¹æ ksi¹¿kê \"" + book.getTitle() + "\" z bazy danych?",
+				"PotwierdŸ",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
-			boolean success;
+			boolean success = false;
 			try {
 				success = mainFrameService.removeBook(book);
 			} catch (DatabaseUnavailableException e) {
-				System.out.println("B³¹d bazy danych!!!");
-				success = false;
-			}
-			bookTableChanged();
-			if (!success) {
+				JOptionPane.showMessageDialog(this,
+						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
+			} 
+			if (success) {
+				bookTableChanged();
+			} else {
 				JOptionPane.showMessageDialog(this,
 						"Wyst¹pi³ b³¹d, nie uda³o siê usun¹æ ksi¹¿ki \"" + book.getTitle() + "\" z bazy danych.",
-						"B³¹d", JOptionPane.ERROR_MESSAGE);
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -179,33 +216,49 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		Reader reader = readerTablePanel.getSelectedReader();
 
 		if (reader == null) {
-			JOptionPane.showMessageDialog(this, "Zaznacz czytelnika, którego chcesz usun¹æ", "Brak zaznaczenia",
+			JOptionPane.showMessageDialog(this,
+					"Zaznacz czytelnika, którego chcesz usun¹æ",
+					"Brak zaznaczenia",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 
-		Object[] options = { "Tak", "Nie" };
+		String[] options = { "Tak", "Nie" };
 		int result = JOptionPane.showOptionDialog(this,
-				"Czy na pewno chcesz usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName()
-				+ " z bazy danych?",
+				"Czy na pewno chcesz usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych?",
 				"PotwierdŸ usuniêcie czytelnika", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				options, options[0]);
 		if (result == JOptionPane.YES_OPTION) {
-			boolean success;
+			boolean success = false;
 			try {
-
 				success = mainFrameService.removeReader(reader);
 			} catch (DatabaseUnavailableException e) {
-				System.out.println("B³¹d bazy danych!!!");
-				success = false;
-			}
-
-			readerTableChanged();
-			if (!success) {
 				JOptionPane.showMessageDialog(this,
-						"B³¹d, nie uda³o siê usun¹æ czytelnika \" + reader.getFirstName() + \" \" + reader.getLastName() + \" z bazy danych.",
-						"B³¹d", JOptionPane.ERROR_MESSAGE);
+						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
+			} 
+			if (success) {
+				readerTableChanged();
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"B³¹d, nie uda³o siê usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych.",
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
 			}
+		}
+	}
+
+	private void connectAndUpdate() {
+		if (mainFrameService.restartConnection()) {
+			updateBookTable();
+			updateReaderTable();
+		} else {
+			JOptionPane.showMessageDialog(this,
+					"Nie uda³o siê nawi¹zaæ po³¹czenia z baz¹ danych.\n" +
+							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+							"B³¹d",
+							JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

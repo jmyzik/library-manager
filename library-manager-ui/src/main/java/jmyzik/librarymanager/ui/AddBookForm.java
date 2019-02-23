@@ -141,10 +141,13 @@ public class AddBookForm extends JDialog implements ActionListener {
 
 			try {
 				addBookFormService.addBook(newBook);
+				bookTableChangedCallback.bookTableChanged();
 			} catch (DatabaseUnavailableException e) {
-				System.out.println("B³¹d bazy danych!!!");
+				JOptionPane.showMessageDialog(this,
+						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+						"B³¹d",
+						JOptionPane.ERROR_MESSAGE);
 			}
-			bookTableChangedCallback.bookTableChanged();
 			setVisible(false);
 		}
 	}

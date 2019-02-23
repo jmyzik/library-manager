@@ -20,4 +20,8 @@ public class AbstractQuery {
 			entityManagerHandler.shutdown();
 		}
 	}
+	
+	public boolean restartConnection() {
+		return entityManagerHandler.connectToDatabase();
+	}
 }
