@@ -26,8 +26,10 @@ import jmyzik.librarymanager.service.AddBookFormService;
 public class AddBookForm extends JDialog implements ActionListener {
 
 	private JFrame parentFrame;
+	
 	private JButton cancelButton;
 	private JButton saveButton;
+	
 	private JLabel titleLabel;
 	private JLabel authorLabel;
 	private JLabel publisherLabel;
@@ -36,6 +38,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 	private JTextField authorField;
 	private JTextField publisherField;
 	private JTextField publicationYearField;
+	
 	private BookTableChangedCallback bookTableChangedCallback;
 	private AddBookFormService addBookFormService;
 
@@ -53,6 +56,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 		saveButton = new JButton("Zapisz");
 		cancelButton.addActionListener(this);
 		saveButton.addActionListener(this);
+	
 		titleLabel = new JLabel("Tytu³");
 		titleField = new JTextField(15);
 		authorLabel = new JLabel("Autor");
@@ -61,6 +65,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 		publisherField = new JTextField(15);
 		publicationYearLabel = new JLabel("Rok wydania");
 		publicationYearField = new JTextField(15);
+		
 		addBookFormService = new AddBookFormService();
 	}
 

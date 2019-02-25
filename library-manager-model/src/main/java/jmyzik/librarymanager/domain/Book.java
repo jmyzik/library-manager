@@ -1,26 +1,24 @@
 package jmyzik.librarymanager.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-//	@TableGenerator(name = "mojGenerator", 
-//		table = "tabela_z_identyfikatorami",
-//		pkColumnName = "nazwa_sekwencji",
-//		valueColumnName = "wartosc_identyfikatora",
-//		pkColumnValue = "id_pracownika",
-//		initialValue = 50,
-//		allocationSize = 15)
 	private long id;
+	@Column(nullable = false)
 	private String title;
+	@Column(nullable = true)
 	private String author;
+	@Column(nullable = true)
 	private String publisher;
+	@Column(nullable = true)
 	private int publicationYear;
 	
 	public Book() {}

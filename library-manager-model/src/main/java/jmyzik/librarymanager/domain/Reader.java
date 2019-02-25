@@ -1,9 +1,11 @@
 package jmyzik.librarymanager.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Reader {
@@ -11,13 +13,17 @@ public class Reader {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO) 
 	private long id;
+	@Column(nullable = false)
 	private String firstName;
+	@Column(nullable = false)
 	private String lastName;
-	private String address;
+	@Embedded
+	@Column(nullable = false)
+	private Address address;
 	
 	public Reader() {}
 
-	public Reader(String firstName, String lastName, String address) {
+	public Reader(String firstName, String lastName, Address address) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -43,11 +49,11 @@ public class Reader {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 }
