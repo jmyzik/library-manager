@@ -5,8 +5,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import org.hibernate.service.spi.ServiceException;
-
 public enum EntityManagerHandler {
 	INSTANCE;
 
@@ -37,7 +35,10 @@ public enum EntityManagerHandler {
 		}
 	}
 
-	public void shutdown() {					// TODO: call this when the application is closed!
+	public void shutdown() {
+		if (entityTransaction.isActive()) {
+			entityTransaction.rollback();
+		}
 		entityManager.close();
 		entityManagerFactory.close();
 	}
