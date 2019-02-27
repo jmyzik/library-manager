@@ -168,6 +168,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 				options,
 				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
+			mainFrameService.shutdownDatabase();
 			System.exit(0);
 		}
 	}
@@ -256,9 +257,9 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		} else {
 			JOptionPane.showMessageDialog(this,
 					"Nie uda³o siê nawi¹zaæ po³¹czenia z baz¹ danych.\n" +
-							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
-							"B³¹d",
-							JOptionPane.ERROR_MESSAGE);
+					"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

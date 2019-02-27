@@ -34,4 +34,8 @@ public class MainFrameService {
 	public boolean restartConnection() {
 		return query.restartConnection();
 	}
+	
+	public void shutdownDatabase() {
+		query.shutdown();
+	}
 }
