@@ -1,14 +1,16 @@
 package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
-import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.Reader;
 
 public class ReaderTablePanel extends JPanel {
@@ -32,8 +34,16 @@ public class ReaderTablePanel extends JPanel {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		table.setFillsViewportHeight(true);
 		table.setAutoCreateRowSorter(true);
+		setColumnWidths();
 	}
-
+	
+	private void setColumnWidths() {
+		int[] widths = { 40, 100, 140, 320 };
+		for (int i = 0; i < widths.length; i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
+		}
+	}
+	
 	private void constructLayout() {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);

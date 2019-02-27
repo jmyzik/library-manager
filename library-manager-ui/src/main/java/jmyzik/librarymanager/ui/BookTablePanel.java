@@ -31,6 +31,14 @@ public class BookTablePanel extends JPanel {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		table.setFillsViewportHeight(true);
 		table.setAutoCreateRowSorter(true);
+		setColumnWidths();
+	}
+	
+	private void setColumnWidths() {
+		int[] widths = { 40, 200, 160, 140, 80 };
+		for (int i = 0; i < widths.length; i++) {
+			table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
+		}
 	}
 	
 	private void constructLayout() {
