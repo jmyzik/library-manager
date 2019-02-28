@@ -5,11 +5,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -20,6 +22,7 @@ import javax.swing.JTabbedPane;
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
+import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.service.MainFrameService;
@@ -28,16 +31,18 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 
 	private JPanel buttonPanel;
 	private JButton refreshButton;
+	private JButton borrowButton;
 	private JTabbedPane tabbedPane;
 	private BookTablePanel bookTablePanel;
 	private ReaderTablePanel readerTablePanel;
+	private JLabel detailsLabel;
 
 	private AddBookForm addBookForm;
 	private AddReaderForm addReaderForm;
 	private MainFrameService mainFrameService;
 
 	public MainFrame() {
-		super("Bibliotekarz");
+		super("Library Manager");
 		initializeVariables();
 		constructAppWindow();
 		constructLayout();
@@ -49,9 +54,11 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	private void initializeVariables() {
 		buttonPanel = new JPanel();
 		refreshButton = new JButton("Odœwie¿");
+		borrowButton = new JButton("Wypo¿ycz");
 		tabbedPane = new JTabbedPane();
 		bookTablePanel = new BookTablePanel();
 		readerTablePanel = new ReaderTablePanel();
+		detailsLabel = new JLabel("Szczegó³owe informacje");
 		addBookForm = new AddBookForm(this);
 		addReaderForm = new AddReaderForm(this);
 		mainFrameService = new MainFrameService();
@@ -70,6 +77,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonPanel.add(refreshButton);
+		buttonPanel.add(borrowButton);
 		
 		tabbedPane.addTab("Ksi¹¿ki", bookTablePanel);
 		tabbedPane.addTab("Czytelnicy", readerTablePanel);
@@ -77,6 +85,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		setLayout(new BorderLayout());
 		add(buttonPanel, BorderLayout.NORTH);
 		add(tabbedPane, BorderLayout.CENTER);
+		add(detailsLabel, BorderLayout.SOUTH);
 	}
 
 	private JMenuBar createMenuBar() {
@@ -112,6 +121,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 			}
 		});
 		refreshButton.addActionListener(l -> connectAndUpdate());
+		borrowButton.addActionListener(l -> borrowBook());
 	}
 
 	private void setCallbacks() {
@@ -124,12 +134,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		try {
 			bookList = mainFrameService.getAllBooks();
 		} catch (DatabaseUnavailableException e) {
-			JOptionPane.showMessageDialog(this,
-					"Wyst¹pi³ problem z baz¹ danych.\n" +
-							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
-					"B³¹d",
-					JOptionPane.ERROR_MESSAGE);
-		} 
+			showDatabaseUnavailableMessage();		} 
 		bookTablePanel.displayBooks(bookList);
 	}
 
@@ -138,12 +143,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		try {
 			readerList = mainFrameService.getAllReaders();
 		} catch (DatabaseUnavailableException e) {
-			JOptionPane.showMessageDialog(this,
-					"Wyst¹pi³ problem z baz¹ danych.\n" +
-							"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
-					"B³¹d",
-					JOptionPane.ERROR_MESSAGE);
-		} 
+			showDatabaseUnavailableMessage();		} 
 		readerTablePanel.displayReaders(readerList);
 	}
 
@@ -197,11 +197,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 			try {
 				success = mainFrameService.removeBook(book);
 			} catch (DatabaseUnavailableException e) {
-				JOptionPane.showMessageDialog(this,
-						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
-			} 
+				showDatabaseUnavailableMessage();			} 
 			if (success) {
 				bookTableChanged();
 			} else {
@@ -234,10 +230,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 			try {
 				success = mainFrameService.removeReader(reader);
 			} catch (DatabaseUnavailableException e) {
-				JOptionPane.showMessageDialog(this,
-						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
+				showDatabaseUnavailableMessage();
 			} 
 			if (success) {
 				readerTableChanged();
@@ -261,5 +254,46 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 					"B³¹d",
 					JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private void borrowBook() {
+		Reader reader = readerTablePanel.getSelectedReader();
+		if (reader == null) {
+			JOptionPane.showMessageDialog(this,
+					"Zaznacz czytelnika, który chce wypo¿yczyæ ksi¹¿kê",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		Book book = bookTablePanel.getSelectedBook();
+		if (book == null) {
+			JOptionPane.showMessageDialog(this,
+					"Zaznacz ksi¹¿kê, któr¹ chcesz wypo¿yczyæ",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		LocalDate borrowDate = LocalDate.now();
+		LocalDate returnDate = borrowDate.plusDays(30);
+
+		BorrowTransaction transaction = new BorrowTransaction(reader, book, borrowDate, returnDate);
+		try {
+			mainFrameService.borrowBook(transaction);
+		} catch (DatabaseUnavailableException e) {
+			showDatabaseUnavailableMessage();
+		}
+		
+		detailsLabel.setText("Czytelnik " + reader + " wypo¿yczy³ ksi¹¿kê " + book + ".\n" +
+							"Data zwrotu: " + returnDate);
+	}
+	
+	private void showDatabaseUnavailableMessage() {
+		JOptionPane.showMessageDialog(this,
+				"Wyst¹pi³ problem z baz¹ danych.\n" +
+						"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+				"B³¹d",
+				JOptionPane.ERROR_MESSAGE);			
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import jmyzik.librarymanager.domain.Book;
+import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
@@ -44,5 +45,11 @@ public class MainFrameQuery extends AbstractQuery {
 			return true;
 		}
 		return false;
+	}
+
+	public void addTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		open();
+		entityManagerHandler.getEntityManager().persist(transaction);
+		entityManagerHandler.getEntityTransaction().commit();
 	}
 }

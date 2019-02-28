@@ -65,4 +65,9 @@ public class Book {
 	public void setPublicationYear(int publicationYear) {
 		this.publicationYear = publicationYear;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("\"%s\" autora %s", title, author);
+	}
 }

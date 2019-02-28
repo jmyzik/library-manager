@@ -5,6 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.hibernate.service.spi.ServiceException;
+
 public enum EntityManagerHandler {
 	INSTANCE;
 
@@ -23,7 +25,7 @@ public enum EntityManagerHandler {
 			entityManager = entityManagerFactory.createEntityManager();
 			entityTransaction = entityManager.getTransaction();
 			isAvailable = true;
-		} catch (Exception e) {
+		} catch (ServiceException e) {
 			isAvailable = false;
 		}
 		return isAvailable;

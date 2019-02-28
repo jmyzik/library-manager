@@ -4,7 +4,7 @@ public class DatabaseUnavailableException extends Exception {
 
 	@Override
 	public String getMessage() {
-		return "Baza danych jest niedostêpna";
+		return "The database is unavailable";
 	}
 	
 }
