@@ -35,7 +35,6 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 	private JTabbedPane tabbedPane;
 	private BookTablePanel bookTablePanel;
 	private ReaderTablePanel readerTablePanel;
-	private JLabel detailsLabel;
 
 	private AddBookForm addBookForm;
 	private AddReaderForm addReaderForm;
@@ -58,7 +57,6 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		tabbedPane = new JTabbedPane();
 		bookTablePanel = new BookTablePanel();
 		readerTablePanel = new ReaderTablePanel();
-		detailsLabel = new JLabel("Szczegó³owe informacje");
 		addBookForm = new AddBookForm(this);
 		addReaderForm = new AddReaderForm(this);
 		mainFrameService = new MainFrameService();
@@ -83,9 +81,8 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		tabbedPane.addTab("Czytelnicy", readerTablePanel);
 
 		setLayout(new BorderLayout());
-		add(buttonPanel, BorderLayout.NORTH);
+		add(buttonPanel, BorderLayout.PAGE_START);
 		add(tabbedPane, BorderLayout.CENTER);
-		add(detailsLabel, BorderLayout.SOUTH);
 	}
 
 	private JMenuBar createMenuBar() {
@@ -284,9 +281,6 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		} catch (DatabaseUnavailableException e) {
 			showDatabaseUnavailableMessage();
 		}
-		
-		detailsLabel.setText("Czytelnik " + reader + " wypo¿yczy³ ksi¹¿kê " + book + ".\n" +
-							"Data zwrotu: " + returnDate);
 	}
 	
 	private void showDatabaseUnavailableMessage() {

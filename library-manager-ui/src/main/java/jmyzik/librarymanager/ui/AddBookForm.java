@@ -110,7 +110,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 
 		setLayout(new BorderLayout());
 		add(bookInfoPanel, BorderLayout.CENTER);
-		add(buttonsPanel, BorderLayout.SOUTH);
+		add(buttonsPanel, BorderLayout.PAGE_END);
 	}
 
 	private void setWindow() {
