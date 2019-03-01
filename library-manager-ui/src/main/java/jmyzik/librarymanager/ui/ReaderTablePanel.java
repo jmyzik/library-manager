@@ -2,6 +2,7 @@ package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -95,18 +96,12 @@ public class ReaderTablePanel extends JPanel {
 	
 	public void addListeners() {
 		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
+		returnButton.addActionListener(e -> returnSelectedBook());
 	}
 	
 	private void readerSelected(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()) {
-			Reader reader = getSelectedReader();
-			if (reader == null) return;
-			try {
-				List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);
-				displayTransactions(transactionList);
-			} catch (DatabaseUnavailableException e1) {
-				showDatabaseUnavailableMessage();
-			}
+			updateBorrowedBooksTable();
 		}		
 	}
 	
@@ -121,17 +116,52 @@ public class ReaderTablePanel extends JPanel {
 	}
 	
 	public Reader getSelectedReader() {
-		int row = readerTable.getSelectedRow();			// TODO what if the table is empty...?
+		int row = readerTable.getSelectedRow();
 		if (row == -1) return null;
 		row = readerTable.convertRowIndexToModel(row);
 		return readerTableModel.getReader(row);
 	}
-	
+
+	private BorrowTransaction getSelectedTransaction() {
+		int row = borrowedBooksTable.getSelectedRow();
+		if (row == -1) return null;
+		row = borrowedBooksTable.convertRowIndexToModel(row);
+		return borrowedBooksTableModel.getTransaction(row);
+	}
+
 	private void showDatabaseUnavailableMessage() {
 		JOptionPane.showMessageDialog(this,
 				"Wyst¹pi³ problem z baz¹ danych.\n" +
 						"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
 				"B³¹d",
 				JOptionPane.ERROR_MESSAGE);			
+	}
+	
+	private void returnSelectedBook() {
+		BorrowTransaction transaction = getSelectedTransaction();
+		if (transaction == null) {
+			JOptionPane.showMessageDialog(this,
+					"Zaznacz ksi¹¿kê, któr¹ chcesz zwróciæ",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		try {
+			readerTablePanelService.removeTransaction(transaction);
+		} catch (DatabaseUnavailableException e) {
+			showDatabaseUnavailableMessage();
+		}
+		updateBorrowedBooksTable();
+	}
+	
+	private void updateBorrowedBooksTable() {
+		Reader reader = getSelectedReader();
+		if (reader == null) return;
+		try {
+			List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);
+			displayTransactions(transactionList);
+		} catch (DatabaseUnavailableException e1) {
+			showDatabaseUnavailableMessage();
+		}
 	}
 }

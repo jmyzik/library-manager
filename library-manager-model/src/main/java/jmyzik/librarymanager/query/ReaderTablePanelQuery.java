@@ -21,4 +21,10 @@ public class ReaderTablePanelQuery extends AbstractQuery {
 		List<BorrowTransaction> transactionList = query.getResultList();
 		return transactionList;
 	}
+
+	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		open();
+		entityManagerHandler.getEntityManager().remove(transaction);
+		entityManagerHandler.getEntityTransaction().commit();
+	}
 }

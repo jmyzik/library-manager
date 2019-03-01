@@ -18,4 +18,9 @@ public class ReaderTablePanelService {
 	public List<BorrowTransaction> getAllTransactions(Reader reader) throws DatabaseUnavailableException {
 		return query.getAllTransactions(reader);
 	}
+
+	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		query.removeTransaction(transaction);
+		
+	}
 }

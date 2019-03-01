@@ -52,7 +52,7 @@ public class BookTablePanel extends JPanel {
 	}
 
 	public Book getSelectedBook() {
-		int row = table.getSelectedRow();			// TODO what if the table is empty...?
+		int row = table.getSelectedRow();
 		if (row == -1) return null;
 		row = table.convertRowIndexToModel(row);
 		return tableModel.getBook(row);
