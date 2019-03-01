@@ -15,9 +15,9 @@ public class ReaderTablePanelQuery extends AbstractQuery {
 	
 	public List<BorrowTransaction> getAllTransactions(Reader reader) throws DatabaseUnavailableException {
 		open();
-		long readerId = reader.getId();
-		// TODO need to work on the query!!!!
-		TypedQuery<BorrowTransaction> query = entityManagerHandler.getEntityManager().createQuery("SELECT b FROM BorrowTransaction b WHERE b.borrower.id = readerId", BorrowTransaction.class);
+		TypedQuery<BorrowTransaction> query = entityManagerHandler.getEntityManager().createQuery
+				("SELECT b FROM BorrowTransaction b WHERE b.borrower.id = :readerId", BorrowTransaction.class);
+		query.setParameter("readerId", reader.getId());
 		List<BorrowTransaction> transactionList = query.getResultList();
 		return transactionList;
 	}

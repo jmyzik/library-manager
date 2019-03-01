@@ -2,15 +2,16 @@ package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
 
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
@@ -93,18 +94,20 @@ public class ReaderTablePanel extends JPanel {
 	}
 	
 	public void addListeners() {
-		readerTable.getSelectionModel().addListSelectionListener(e -> {
-			if(!e.getValueIsAdjusting()) {
-				Reader reader = getSelectedReader();
-				try {
-					List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);
-				} catch (DatabaseUnavailableException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				borrowedBooksTableModel.setTransactionList(new ArrayList<BorrowTransaction>());
+		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
+	}
+	
+	private void readerSelected(ListSelectionEvent e) {
+		if(!e.getValueIsAdjusting()) {
+			Reader reader = getSelectedReader();
+			if (reader == null) return;
+			try {
+				List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);
+				displayTransactions(transactionList);
+			} catch (DatabaseUnavailableException e1) {
+				showDatabaseUnavailableMessage();
 			}
-		});
+		}		
 	}
 	
 	public void displayReaders(List<Reader> readerList) {
@@ -112,10 +115,23 @@ public class ReaderTablePanel extends JPanel {
 		readerTableModel.fireTableDataChanged();
 	}
 	
+	public void displayTransactions(List<BorrowTransaction> transactionList) {
+		borrowedBooksTableModel.setTransactionList(transactionList);
+		borrowedBooksTableModel.fireTableDataChanged();		
+	}
+	
 	public Reader getSelectedReader() {
 		int row = readerTable.getSelectedRow();			// TODO what if the table is empty...?
 		if (row == -1) return null;
 		row = readerTable.convertRowIndexToModel(row);
 		return readerTableModel.getReader(row);
+	}
+	
+	private void showDatabaseUnavailableMessage() {
+		JOptionPane.showMessageDialog(this,
+				"Wyst¹pi³ problem z baz¹ danych.\n" +
+						"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
+				"B³¹d",
+				JOptionPane.ERROR_MESSAGE);			
 	}
 }
