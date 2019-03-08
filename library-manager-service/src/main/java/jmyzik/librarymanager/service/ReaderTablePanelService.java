@@ -2,6 +2,7 @@ package jmyzik.librarymanager.service;
 
 import java.util.List;
 
+import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
@@ -19,8 +20,9 @@ public class ReaderTablePanelService {
 		return query.getAllTransactions(reader);
 	}
 
-	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+	public void returnBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		Book book = transaction.getBook();
 		query.removeTransaction(transaction);
-		
+		query.increaseCopies(book);
 	}
 }

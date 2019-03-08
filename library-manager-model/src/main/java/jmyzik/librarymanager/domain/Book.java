@@ -20,14 +20,17 @@ public class Book {
 	private String publisher;
 	@Column(nullable = true)
 	private int publicationYear;
+	@Column(nullable = false)
+	private int copies;
 	
 	public Book() {}
 
-	public Book(String title, String author, String publisher, int publicationYear) {
+	public Book(String title, String author, String publisher, int publicationYear, int copies) {
 		this.title = title;
 		this.author = author;
 		this.publisher = publisher;
 		this.publicationYear = publicationYear;
+		this.copies = copies;
 	}
 
 	public long getId() {
@@ -64,6 +67,14 @@ public class Book {
 
 	public void setPublicationYear(int publicationYear) {
 		this.publicationYear = publicationYear;
+	}
+
+	public int getCopies() {
+		return copies;
+	}
+
+	public void setCopies(int copies) {
+		this.copies = copies;
 	}
 
 	@Override

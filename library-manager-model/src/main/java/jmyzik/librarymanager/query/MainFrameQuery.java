@@ -52,4 +52,17 @@ public class MainFrameQuery extends AbstractQuery {
 		entityManagerHandler.getEntityManager().persist(transaction);
 		entityManagerHandler.getEntityTransaction().commit();
 	}
+
+	public boolean modifyBook(Book newBook) throws DatabaseUnavailableException {
+		open();
+		Book book = entityManagerHandler.getEntityManager().find(Book.class, newBook.getId());
+		if (book == null) return false;
+		book.setTitle(newBook.getTitle());
+		book.setAuthor(newBook.getAuthor());
+		book.setPublisher(newBook.getPublisher());
+		book.setPublicationYear(newBook.getPublicationYear());
+		book.setCopies(newBook.getCopies());
+		entityManagerHandler.getEntityTransaction().commit();
+		return true;
+	}
 }

@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 
+import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
@@ -32,6 +33,7 @@ public class ReaderTablePanel extends JPanel {
 	private JButton borrowButton;
 	private JButton returnButton;
 	private ReaderTablePanelService readerTablePanelService;
+	private BookTableChangedCallback bookTableChangedCallback;
 
 	public ReaderTablePanel() {
 		initalizeVariables();
@@ -99,6 +101,10 @@ public class ReaderTablePanel extends JPanel {
 		returnButton.addActionListener(e -> returnSelectedBook());
 	}
 	
+	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
+		this.bookTableChangedCallback = bookTableChangedCallback;
+	}
+	
 	private void readerSelected(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()) {
 			updateBorrowedBooksTable();
@@ -139,6 +145,7 @@ public class ReaderTablePanel extends JPanel {
 	
 	private void returnSelectedBook() {
 		BorrowTransaction transaction = getSelectedTransaction();
+		
 		if (transaction == null) {
 			JOptionPane.showMessageDialog(this,
 					"Zaznacz ksi¹¿kê, któr¹ chcesz zwróciæ",
@@ -146,15 +153,17 @@ public class ReaderTablePanel extends JPanel {
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+
 		try {
-			readerTablePanelService.removeTransaction(transaction);
+			readerTablePanelService.returnBook(transaction);
+			updateBorrowedBooksTable();
+			bookTableChangedCallback.bookTableChanged();
 		} catch (DatabaseUnavailableException e) {
 			showDatabaseUnavailableMessage();
 		}
-		updateBorrowedBooksTable();
 	}
 	
-	private void updateBorrowedBooksTable() {
+	public void updateBorrowedBooksTable() {
 		Reader reader = getSelectedReader();
 		if (reader == null) return;
 		try {

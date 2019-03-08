@@ -34,11 +34,13 @@ public class AddBookForm extends JDialog implements ActionListener {
 	private JLabel authorLabel;
 	private JLabel publisherLabel;
 	private JLabel publicationYearLabel;
+	private JLabel copiesLabel;
 	private JTextField titleField;
 	private JTextField authorField;
 	private JTextField publisherField;
 	private JTextField publicationYearField;
-	
+	private JTextField copiesField;
+		
 	private BookTableChangedCallback bookTableChangedCallback;
 	private AddBookFormService addBookFormService;
 
@@ -65,6 +67,8 @@ public class AddBookForm extends JDialog implements ActionListener {
 		publisherField = new JTextField(15);
 		publicationYearLabel = new JLabel("Rok wydania");
 		publicationYearField = new JTextField(15);
+		copiesLabel = new JLabel("Liczba egzemplarzy");
+		copiesField = new JTextField(15);
 		
 		addBookFormService = new AddBookFormService();
 	}
@@ -74,8 +78,8 @@ public class AddBookForm extends JDialog implements ActionListener {
 		JPanel bookInfoPanel = new JPanel();
 		JPanel buttonsPanel = new JPanel();
 		
-		JLabel[] labels = new JLabel[] {titleLabel, authorLabel, publisherLabel, publicationYearLabel};
-		JTextField[] textFields = new JTextField[] {titleField, authorField, publisherField, publicationYearField};
+		JLabel[] labels = new JLabel[] {titleLabel, authorLabel, publisherLabel, publicationYearLabel, copiesLabel};
+		JTextField[] textFields = new JTextField[] {titleField, authorField, publisherField, publicationYearField, copiesField};
 		
 		int space = 15;
 		Border spaceBorder = BorderFactory.createEmptyBorder(space, space, space, space);
@@ -114,14 +118,14 @@ public class AddBookForm extends JDialog implements ActionListener {
 	}
 
 	private void setWindow() {
-		setSize(350, 250);
+		setSize(350, 280);
 		setResizable(false);
 		setLocationRelativeTo(parentFrame);
 	}
 	
 	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
 		this.bookTableChangedCallback = bookTableChangedCallback;
-	}	
+	}
 	
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == cancelButton) {
@@ -136,13 +140,19 @@ public class AddBookForm extends JDialog implements ActionListener {
 			} catch (NumberFormatException e) {
 				publicationYear = -1;
 			}
+			int copies;
+			try {
+				copies = Integer.parseInt(copiesField.getText());
+			} catch (NumberFormatException e) {
+				copies = -1;
+			}
 			
-			if(!validateData(title, author, publisher, publicationYear)) {
+			if(!validateData(title, author, publisher, publicationYear, copies)) {
 				JOptionPane.showMessageDialog(this, "WprowadŸ poprawne dane", "B³êdne dane", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
-			Book newBook = new Book(title, author, publisher, publicationYear);
+			Book newBook = new Book(title, author, publisher, publicationYear, copies);
 
 			try {
 				addBookFormService.addBook(newBook);
@@ -157,11 +167,12 @@ public class AddBookForm extends JDialog implements ActionListener {
 		}
 	}
 	
-	private boolean validateData(String title, String author, String publisher, int publicationYear) {
+	private boolean validateData(String title, String author, String publisher, int publicationYear, int copies) {
 		return !title.equals("") &&
 				!author.equals("") &&
 				!publisher.equals("") &&
-				publicationYear != -1;
+				publicationYear != -1 &&
+				copies >= 0;
 	}
 	
 	public void display() {
@@ -170,6 +181,7 @@ public class AddBookForm extends JDialog implements ActionListener {
 		authorField.setText("");
 		publisherField.setText("");
 		publicationYearField.setText("");
+		copiesField.setText("");
 		setVisible(true);
 		titleField.requestFocusInWindow();
 	}

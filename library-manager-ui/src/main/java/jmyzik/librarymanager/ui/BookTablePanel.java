@@ -35,7 +35,7 @@ public class BookTablePanel extends JPanel {
 	}
 	
 	private void setColumnWidths() {
-		int[] widths = { 40, 200, 160, 140, 80 };
+		int[] widths = { 40, 200, 160, 140, 80, 80 };
 		for (int i = 0; i < widths.length; i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
 		}

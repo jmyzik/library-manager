@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -117,13 +116,14 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 				closeApp();
 			}
 		});
-		refreshButton.addActionListener(l -> connectAndUpdate());
-		borrowButton.addActionListener(l -> borrowBook());
+		refreshButton.addActionListener(e -> connectAndUpdate());
+		borrowButton.addActionListener(e -> borrowBook());
 	}
 
 	private void setCallbacks() {
 		addBookForm.setBookTableChangedCallback(this);
 		addReaderForm.setReaderTableChangedCallback(this);
+		readerTablePanel.setBookTableChangedCallback(this);
 	}
 
 	private void updateBookTable() {
@@ -196,7 +196,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 			} catch (DatabaseUnavailableException e) {
 				showDatabaseUnavailableMessage();			} 
 			if (success) {
-				bookTableChanged();
+				updateBookTable();
 			} else {
 				JOptionPane.showMessageDialog(this,
 						"Wyst¹pi³ b³¹d, nie uda³o siê usun¹æ ksi¹¿ki \"" + book.getTitle() + "\" z bazy danych.",
@@ -230,7 +230,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 				showDatabaseUnavailableMessage();
 			} 
 			if (success) {
-				readerTableChanged();
+				updateReaderTable();
 			} else {
 				JOptionPane.showMessageDialog(this,
 						"B³¹d, nie uda³o siê usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych.",
@@ -271,16 +271,35 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+		
+		if (book.getCopies() < 1) {
+			JOptionPane.showMessageDialog(this,
+					"Ksi¹¿ka nie jest dostêpna do wypo¿yczenia",
+					"Ksi¹¿ka niedostêpna",
+					JOptionPane.INFORMATION_MESSAGE);			
+			return;
+		}
 
 		LocalDate borrowDate = LocalDate.now();
 		LocalDate returnDate = borrowDate.plusDays(30);
 
 		BorrowTransaction transaction = new BorrowTransaction(reader, book, borrowDate, returnDate);
+		boolean success = false;
 		try {
-			mainFrameService.borrowBook(transaction);
+			success = mainFrameService.borrowBook(transaction);
 		} catch (DatabaseUnavailableException e) {
 			showDatabaseUnavailableMessage();
 		}
+		if (success) {
+			updateBookTable();
+			readerTablePanel.updateBorrowedBooksTable();
+		} else {
+			JOptionPane.showMessageDialog(this,
+					"Wyst¹pi³ b³¹d, nie uda³o siê wypo¿yczyæ ksi¹¿ki \"" + book.getTitle() + "\".",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
+		}
+
 	}
 	
 	private void showDatabaseUnavailableMessage() {

@@ -27,4 +27,11 @@ public class ReaderTablePanelQuery extends AbstractQuery {
 		entityManagerHandler.getEntityManager().remove(transaction);
 		entityManagerHandler.getEntityTransaction().commit();
 	}
+
+	public void increaseCopies(Book book) throws DatabaseUnavailableException {
+		open();
+		int copies = book.getCopies();
+		book.setCopies(++copies);
+		entityManagerHandler.getEntityTransaction().commit();
+	}
 }

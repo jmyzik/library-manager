@@ -10,7 +10,7 @@ import jmyzik.librarymanager.domain.Book;
 public class BookTableModel extends AbstractTableModel {
 
 	private List<Book> bookList;
-	private String[] columnNames = { "Id", "Tytu³", "Autor", "Wydawnictwo", "Rok publikacji" };
+	private String[] columnNames = { "Id", "Tytu³", "Autor", "Wydawnictwo", "Rok publikacji", "Liczba egzemplarzy" };
 
 	public BookTableModel() {
 		bookList = new ArrayList<Book>();
@@ -40,6 +40,8 @@ public class BookTableModel extends AbstractTableModel {
 			return book.getPublisher();
 		case 4:
 			return book.getPublicationYear();
+		case 5:
+			return book.getCopies();
 		default:
 			return null;
 		}

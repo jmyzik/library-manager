@@ -32,8 +32,14 @@ public class MainFrameService {
 		return query.removeReader(reader);
 	}
 
-	public void borrowBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
+	public boolean borrowBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		Book book = transaction.getBook();
+		int copies = book.getCopies();
+		if (copies < 1) return false;
+		book.setCopies(--copies);
+		if (!query.modifyBook(book)) return false;
 		query.addTransaction(transaction);
+		return true;
 	}
 
 	public boolean restartConnection() {
