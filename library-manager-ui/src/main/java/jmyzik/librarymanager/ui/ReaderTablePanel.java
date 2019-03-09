@@ -166,6 +166,7 @@ public class ReaderTablePanel extends JPanel {
 	public void updateBorrowedBooksTable() {
 		Reader reader = getSelectedReader();
 		if (reader == null) return;
+		nameLabel.setText(reader.toString());
 		try {
 			List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);
 			displayTransactions(transactionList);
