@@ -24,8 +24,10 @@ public class ReaderTablePanelService {
 	}
 
 	public void returnBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
-		Book book = transaction.getBook();
 		transactionsDAO.removeTransaction(transaction);
-		booksDAO.increaseCopies(book);
+		Book book = transaction.getBook();
+		int copies = book.getCopies();
+		book.setCopies(++copies);
+		booksDAO.modifyBook(book);
 	}
 }

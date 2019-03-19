@@ -10,6 +10,12 @@ import jmyzik.librarymanager.model.DatabaseUnavailableException;
 
 public class TransactionsDAO extends GenericDAO {
 	
+	public void addTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+		open();
+		entityManagerHandler.getEntityManager().persist(transaction);
+		entityManagerHandler.getEntityTransaction().commit();
+	}
+
 	public List<BorrowTransaction> getAllTransactions(Reader reader) throws DatabaseUnavailableException {
 		open();
 		TypedQuery<BorrowTransaction> query = entityManagerHandler.getEntityManager().createQuery
@@ -17,12 +23,6 @@ public class TransactionsDAO extends GenericDAO {
 		query.setParameter("readerId", reader.getId());
 		List<BorrowTransaction> transactionList = query.getResultList();
 		return transactionList;
-	}
-
-	public void addTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
-		open();
-		entityManagerHandler.getEntityManager().persist(transaction);
-		entityManagerHandler.getEntityTransaction().commit();
 	}
 
 	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
