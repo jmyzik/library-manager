@@ -244,6 +244,7 @@ public class MainFrame extends JFrame implements BookTableChangedCallback, Reade
 		if (mainFrameService.restartConnection()) {
 			updateBookTable();
 			updateReaderTable();
+			readerTablePanel.updateBorrowedBooksTable();
 		} else {
 			JOptionPane.showMessageDialog(this,
 					"Nie uda³o siê nawi¹zaæ po³¹czenia z baz¹ danych.\n" +

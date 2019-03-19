@@ -1,17 +1,14 @@
-package jmyzik.librarymanager.query;
+package jmyzik.librarymanager.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 
-import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.model.EntityManagerHandler;
 
-public class ReaderTablePanelQuery extends AbstractQuery {
+public class TransactionsDAO extends GenericDAO {
 	
 	public List<BorrowTransaction> getAllTransactions(Reader reader) throws DatabaseUnavailableException {
 		open();
@@ -22,16 +19,15 @@ public class ReaderTablePanelQuery extends AbstractQuery {
 		return transactionList;
 	}
 
-	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
+	public void addTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
 		open();
-		entityManagerHandler.getEntityManager().remove(transaction);
+		entityManagerHandler.getEntityManager().persist(transaction);
 		entityManagerHandler.getEntityTransaction().commit();
 	}
 
-	public void increaseCopies(Book book) throws DatabaseUnavailableException {
+	public void removeTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
 		open();
-		int copies = book.getCopies();
-		book.setCopies(++copies);
+		entityManagerHandler.getEntityManager().remove(transaction);
 		entityManagerHandler.getEntityTransaction().commit();
 	}
 }

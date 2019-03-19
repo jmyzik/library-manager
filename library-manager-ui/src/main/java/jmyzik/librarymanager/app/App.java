@@ -16,6 +16,7 @@ public class App {
 				IllegalAccessException |
 				UnsupportedLookAndFeelException e) {
 		}
+		
 		SwingUtilities.invokeLater(() -> new MainFrame());
 	}
 }

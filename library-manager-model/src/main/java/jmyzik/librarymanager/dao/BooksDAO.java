@@ -1,18 +1,14 @@
-package jmyzik.librarymanager.query;
+package jmyzik.librarymanager.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
 
 import jmyzik.librarymanager.domain.Book;
-import jmyzik.librarymanager.domain.BorrowTransaction;
-import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.model.EntityManagerHandler;
 
-public class MainFrameQuery extends AbstractQuery {
-	
+public class BooksDAO extends GenericDAO {
+
 	public List<Book> getAllBooks() throws DatabaseUnavailableException {
 		open();
 		TypedQuery<Book> query = entityManagerHandler.getEntityManager().createQuery("SELECT b FROM Book b", Book.class);
@@ -20,23 +16,12 @@ public class MainFrameQuery extends AbstractQuery {
 		return bookList;
 	}
 
-	public List<Reader> getAllReaders() throws DatabaseUnavailableException {
+	public void addBook(Book book) throws DatabaseUnavailableException {
 		open();
-		TypedQuery<Reader> query = entityManagerHandler.getEntityManager().createQuery("SELECT r FROM Reader r", Reader.class);
-		List<Reader> readerList = query.getResultList();
-		return readerList;
+		entityManagerHandler.getEntityManager().persist(book);
+		entityManagerHandler.getEntityTransaction().commit();
 	}
-
-	public boolean removeReader(Reader reader) throws DatabaseUnavailableException {
-		open();
-		if (entityManagerHandler.getEntityManager().contains(reader)) {
-			entityManagerHandler.getEntityManager().remove(reader);
-			entityManagerHandler.getEntityTransaction().commit();
-			return true;
-		}
-		return false;
-	}
-
+	
 	public boolean removeBook(Book book) throws DatabaseUnavailableException {
 		open();
 		if (entityManagerHandler.getEntityManager().contains(book)) {
@@ -46,13 +31,7 @@ public class MainFrameQuery extends AbstractQuery {
 		}
 		return false;
 	}
-
-	public void addTransaction(BorrowTransaction transaction) throws DatabaseUnavailableException {
-		open();
-		entityManagerHandler.getEntityManager().persist(transaction);
-		entityManagerHandler.getEntityTransaction().commit();
-	}
-
+	
 	public boolean modifyBook(Book newBook) throws DatabaseUnavailableException {
 		open();
 		Book book = entityManagerHandler.getEntityManager().find(Book.class, newBook.getId());
@@ -64,5 +43,12 @@ public class MainFrameQuery extends AbstractQuery {
 		book.setCopies(newBook.getCopies());
 		entityManagerHandler.getEntityTransaction().commit();
 		return true;
+	}
+
+	public void increaseCopies(Book book) throws DatabaseUnavailableException {
+		open();
+		int copies = book.getCopies();
+		book.setCopies(++copies);
+		entityManagerHandler.getEntityTransaction().commit();
 	}
 }

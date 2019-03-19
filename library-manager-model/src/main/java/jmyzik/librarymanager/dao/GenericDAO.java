@@ -1,9 +1,9 @@
-package jmyzik.librarymanager.query;
+package jmyzik.librarymanager.dao;
 
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
 
-public class AbstractQuery {
+public class GenericDAO {
 
 	protected EntityManagerHandler entityManagerHandler = EntityManagerHandler.INSTANCE;
 	

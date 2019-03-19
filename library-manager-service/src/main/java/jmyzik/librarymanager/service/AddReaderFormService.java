@@ -1,18 +1,18 @@
 package jmyzik.librarymanager.service;
 
+import jmyzik.librarymanager.dao.ReadersDAO;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.query.AddReaderFormQuery;
 
 public class AddReaderFormService {
 	
-	AddReaderFormQuery query;
+	ReadersDAO readersDAO;
 	
 	public AddReaderFormService() {
-		query = new AddReaderFormQuery();
+		readersDAO = new ReadersDAO();
 	}
 
 	public void addReader(Reader reader) throws DatabaseUnavailableException {
-		query.addReader(reader);
+		readersDAO.addReader(reader);
 	}
 }

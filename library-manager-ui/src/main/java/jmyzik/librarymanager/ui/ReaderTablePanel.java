@@ -96,7 +96,7 @@ public class ReaderTablePanel extends JPanel {
 		add(detailsPanel);
 	}
 	
-	public void addListeners() {
+	private void addListeners() {
 		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
 		returnButton.addActionListener(e -> returnSelectedBook());
 	}
@@ -116,7 +116,7 @@ public class ReaderTablePanel extends JPanel {
 		readerTableModel.fireTableDataChanged();
 	}
 	
-	public void displayTransactions(List<BorrowTransaction> transactionList) {
+	private void displayTransactions(List<BorrowTransaction> transactionList) {
 		borrowedBooksTableModel.setTransactionList(transactionList);
 		borrowedBooksTableModel.fireTableDataChanged();		
 	}
@@ -165,7 +165,11 @@ public class ReaderTablePanel extends JPanel {
 	
 	public void updateBorrowedBooksTable() {
 		Reader reader = getSelectedReader();
-		if (reader == null) return;
+		if (reader == null) {
+			nameLabel.setText("");
+			displayTransactions(new ArrayList<BorrowTransaction>());
+			return;
+		}
 		nameLabel.setText(reader.toString());
 		try {
 			List<BorrowTransaction> transactionList = readerTablePanelService.getAllTransactions(reader);

@@ -2,27 +2,30 @@ package jmyzik.librarymanager.service;
 
 import java.util.List;
 
+import jmyzik.librarymanager.dao.BooksDAO;
+import jmyzik.librarymanager.dao.TransactionsDAO;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.query.ReaderTablePanelQuery;
 
 public class ReaderTablePanelService {
 	
-	private ReaderTablePanelQuery query;
+	private TransactionsDAO transactionsDAO;
+	private BooksDAO booksDAO;
 	
 	public ReaderTablePanelService() {
-		query = new ReaderTablePanelQuery();
+		transactionsDAO = new TransactionsDAO();
+		booksDAO = new BooksDAO();
 	}
 	
 	public List<BorrowTransaction> getAllTransactions(Reader reader) throws DatabaseUnavailableException {
-		return query.getAllTransactions(reader);
+		return transactionsDAO.getAllTransactions(reader);
 	}
 
 	public void returnBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
 		Book book = transaction.getBook();
-		query.removeTransaction(transaction);
-		query.increaseCopies(book);
+		transactionsDAO.removeTransaction(transaction);
+		booksDAO.increaseCopies(book);
 	}
 }

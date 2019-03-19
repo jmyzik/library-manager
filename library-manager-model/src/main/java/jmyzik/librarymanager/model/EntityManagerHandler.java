@@ -31,7 +31,7 @@ public enum EntityManagerHandler {
 		return isAvailable;
 	}
 	
-	public void open()  {
+	public void open() {
 		if (!entityTransaction.isActive()) {
 			entityTransaction.begin();
 		}
