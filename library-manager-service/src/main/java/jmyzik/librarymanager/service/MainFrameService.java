@@ -3,6 +3,7 @@ package jmyzik.librarymanager.service;
 import java.util.List;
 
 import jmyzik.librarymanager.dao.BooksDAO;
+import jmyzik.librarymanager.dao.ConnectionManager;
 import jmyzik.librarymanager.dao.GenericDAO;
 import jmyzik.librarymanager.dao.ReadersDAO;
 import jmyzik.librarymanager.dao.TransactionsDAO;
@@ -16,13 +17,13 @@ public class MainFrameService {
 	private BooksDAO booksDAO;
 	private ReadersDAO readersDAO;
 	private TransactionsDAO transactionsDAO;
-	private GenericDAO genericDAO;
+	private ConnectionManager connectionManager;
 	
 	public MainFrameService() {
 		booksDAO = new BooksDAO();
 		readersDAO = new ReadersDAO();
 		transactionsDAO = new TransactionsDAO();
-		genericDAO = new GenericDAO();
+		connectionManager = new ConnectionManager();
 	}
 	
 	public List<Book> getAllBooks() throws DatabaseUnavailableException {
@@ -52,10 +53,10 @@ public class MainFrameService {
 	}
 
 	public boolean restartConnection() {
-		return genericDAO.restartConnection();
+		return connectionManager.restartConnection();
 	}
 	
 	public void shutdownDatabase() {
-		genericDAO.shutdown();
+		connectionManager.shutdown();
 	}
 }

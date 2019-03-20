@@ -3,7 +3,7 @@ package jmyzik.librarymanager.dao;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
 
-public class GenericDAO {
+public abstract class GenericDAO {
 
 	protected EntityManagerHandler entityManagerHandler = EntityManagerHandler.INSTANCE;
 	
@@ -13,15 +13,5 @@ public class GenericDAO {
 		} else {
 			throw new DatabaseUnavailableException();
 		}
-	}
-	
-	public void shutdown() {
-		if (entityManagerHandler.isAvailable()) {
-			entityManagerHandler.shutdown();
-		}
-	}
-	
-	public boolean restartConnection() {
-		return entityManagerHandler.connectToDatabase();
 	}
 }
