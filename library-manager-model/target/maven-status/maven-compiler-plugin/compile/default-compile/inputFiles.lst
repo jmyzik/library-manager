@@ -1,0 +1,11 @@
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\domain\Reader.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\domain\BorrowTransaction.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\domain\Address.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\dao\BooksDAO.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\model\EntityManagerHandler.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\dao\ConnectionManager.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\domain\Book.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\dao\GenericDAO.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\dao\TransactionsDAO.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\model\DatabaseUnavailableException.java
+C:\Users\Janusz\eclipse-workspace\library-manager\library-manager-model\src\main\java\jmyzik\librarymanager\dao\ReadersDAO.java
