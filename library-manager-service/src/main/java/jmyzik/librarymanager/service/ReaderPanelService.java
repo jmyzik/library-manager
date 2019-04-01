@@ -9,12 +9,12 @@ import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 
-public class ReaderTablePanelService {
+public class ReaderPanelService {
 	
 	private TransactionsDAO transactionsDAO;
 	private BooksDAO booksDAO;
 	
-	public ReaderTablePanelService() {
+	public ReaderPanelService() {
 		transactionsDAO = new TransactionsDAO();
 		booksDAO = new BooksDAO();
 	}

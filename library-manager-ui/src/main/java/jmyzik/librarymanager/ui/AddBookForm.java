@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -13,17 +12,11 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
-import jmyzik.librarymanager.domain.Book;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.service.AddBookFormService;
-
-public class AddBookForm extends JDialog implements ActionListener {
+public class AddBookForm extends JDialog {
 
 	private JFrame parentFrame;
 	
@@ -35,15 +28,13 @@ public class AddBookForm extends JDialog implements ActionListener {
 	private JLabel publisherLabel;
 	private JLabel publicationYearLabel;
 	private JLabel copiesLabel;
+	
 	private JTextField titleField;
 	private JTextField authorField;
 	private JTextField publisherField;
 	private JTextField publicationYearField;
 	private JTextField copiesField;
 		
-	private BookTableChangedCallback bookTableChangedCallback;
-	private AddBookFormService addBookFormService;
-
 	public AddBookForm(JFrame parentFrame) {
 		super(parentFrame, "Dodaj ksi¹¿kê", true);
 
@@ -56,8 +47,6 @@ public class AddBookForm extends JDialog implements ActionListener {
 	private void initializeVariables() {
 		cancelButton = new JButton("Anuluj");
 		saveButton = new JButton("Zapisz");
-		cancelButton.addActionListener(this);
-		saveButton.addActionListener(this);
 	
 		titleLabel = new JLabel("Tytu³");
 		titleField = new JTextField(15);
@@ -69,10 +58,8 @@ public class AddBookForm extends JDialog implements ActionListener {
 		publicationYearField = new JTextField(15);
 		copiesLabel = new JLabel("Liczba egzemplarzy");
 		copiesField = new JTextField(15);
-		
-		addBookFormService = new AddBookFormService();
 	}
-
+	
 	private void constructLayout() {
 
 		JPanel bookInfoPanel = new JPanel();
@@ -123,58 +110,6 @@ public class AddBookForm extends JDialog implements ActionListener {
 		setLocationRelativeTo(parentFrame);
 	}
 	
-	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
-		this.bookTableChangedCallback = bookTableChangedCallback;
-	}
-	
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == cancelButton) {
-			setVisible(false);
-		} else if (event.getSource() == saveButton) {
-			String title = titleField.getText();
-			String author = authorField.getText();
-			String publisher = publisherField.getText();
-			int publicationYear;
-			try {
-				publicationYear = Integer.parseInt(publicationYearField.getText());
-			} catch (NumberFormatException e) {
-				publicationYear = -1;
-			}
-			int copies;
-			try {
-				copies = Integer.parseInt(copiesField.getText());
-			} catch (NumberFormatException e) {
-				copies = -1;
-			}
-			
-			if(!validateData(title, author, publisher, publicationYear, copies)) {
-				JOptionPane.showMessageDialog(this, "WprowadŸ poprawne dane", "B³êdne dane", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			
-			Book newBook = new Book(title, author, publisher, publicationYear, copies);
-
-			try {
-				addBookFormService.addBook(newBook);
-				bookTableChangedCallback.bookTableChanged();
-			} catch (DatabaseUnavailableException e) {
-				JOptionPane.showMessageDialog(this,
-						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			setVisible(false);
-		}
-	}
-	
-	private boolean validateData(String title, String author, String publisher, int publicationYear, int copies) {
-		return !title.equals("") &&
-				!author.equals("") &&
-				!publisher.equals("") &&
-				publicationYear != -1 &&
-				copies >= 0;
-	}
-	
 	public void display() {
 		setLocationRelativeTo(parentFrame);
 		titleField.setText("");
@@ -185,4 +120,32 @@ public class AddBookForm extends JDialog implements ActionListener {
 		setVisible(true);
 		titleField.requestFocusInWindow();
 	}
+	
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+
+	public JTextField getTitleField() {
+		return titleField;
+	}
+
+	public JTextField getAuthorField() {
+		return authorField;
+	}
+
+	public JTextField getPublisherField() {
+		return publisherField;
+	}
+
+	public JTextField getPublicationYearField() {
+		return publicationYearField;
+	}
+
+	public JTextField getCopiesField() {
+		return copiesField;
+	}	
 }

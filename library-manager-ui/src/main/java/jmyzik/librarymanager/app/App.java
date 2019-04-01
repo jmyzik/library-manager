@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import jmyzik.librarymanager.controller.AppController;
 import jmyzik.librarymanager.ui.MainFrame;
 
 public class App {
@@ -17,6 +18,10 @@ public class App {
 				UnsupportedLookAndFeelException e) {
 		}
 		
-		SwingUtilities.invokeLater(() -> new MainFrame());
+		SwingUtilities.invokeLater(() -> {
+			MainFrame mainFrame = new MainFrame();
+			AppController appController = new AppController(mainFrame);
+			appController.connectAndUpdate();
+		});
 	}
 }

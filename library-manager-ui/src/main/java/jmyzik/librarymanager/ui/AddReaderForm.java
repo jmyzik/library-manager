@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -13,18 +12,11 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
-import jmyzik.librarymanager.domain.Address;
-import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
-import jmyzik.librarymanager.service.AddReaderFormService;
-
-public class AddReaderForm extends JDialog implements ActionListener {
+public class AddReaderForm extends JDialog {
 
 	private JFrame parentFrame;
 	
@@ -38,7 +30,7 @@ public class AddReaderForm extends JDialog implements ActionListener {
 	private JLabel apartmentNumberLabel;
 	private JLabel zipCodeLabel;
 	private JLabel cityLabel;
-
+	
 	private JTextField firstNameField;
 	private JTextField lastNameField;
 	private JTextField streetField;
@@ -47,9 +39,6 @@ public class AddReaderForm extends JDialog implements ActionListener {
 	private JTextField zipCodeField;
 	private JTextField cityField;
 	
-	private ReaderTableChangedCallback readerTableChangedCallback;
-	private AddReaderFormService addReaderFormService;
-
 	public AddReaderForm(JFrame parentFrame) {
 		super(parentFrame, "Dodaj czytelnika", true);
 
@@ -62,8 +51,6 @@ public class AddReaderForm extends JDialog implements ActionListener {
 	private void initializeVariables() {
 		cancelButton = new JButton("Anuluj");
 		saveButton = new JButton("Zapisz");
-		cancelButton.addActionListener(this);
-		saveButton.addActionListener(this);
 
 		firstNameLabel = new JLabel("Imiê");
 		firstNameField = new JTextField(15);
@@ -79,10 +66,8 @@ public class AddReaderForm extends JDialog implements ActionListener {
 		zipCodeField = new JTextField(15);
 		cityLabel = new JLabel("Miasto");
 		cityField = new JTextField(15);
-
-		addReaderFormService = new AddReaderFormService();
 	}
-
+	
 	private void constructLayout() {
 
 		JPanel bookInfoPanel = new JPanel();
@@ -132,64 +117,7 @@ public class AddReaderForm extends JDialog implements ActionListener {
 		setResizable(false);
 		setLocationRelativeTo(parentFrame);
 	}
-	
-	public void setReaderTableChangedCallback(ReaderTableChangedCallback readerTableChangedCallback) {
-		this.readerTableChangedCallback = readerTableChangedCallback;
-	}	
-	
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == cancelButton) {
-			setVisible(false);
-		} else if (event.getSource() == saveButton) {
-			String firstName = firstNameField.getText();
-			String lastName = lastNameField.getText();
-			String street = streetField.getText();
-			int houseNumber;
-			try {
-				houseNumber = Integer.parseInt(houseNumberField.getText());
-			} catch (NumberFormatException e) {
-				houseNumber = -1;
-			}
-			Integer apartmentNumber;
-			try {
-				apartmentNumber = Integer.parseInt(apartmentNumberField.getText());
-			} catch (NumberFormatException e) {
-				apartmentNumber = null;
-			}
-			String zipCode = zipCodeField.getText();
-			String city = cityField.getText();
-			
-			if(!validateData(firstName, lastName, street, houseNumber, apartmentNumber, zipCode, city)) {
-				JOptionPane.showMessageDialog(this, "WprowadŸ poprawne dane", "B³êdne dane", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			
-			Address address = new Address(street, houseNumber, apartmentNumber, zipCode, city);
-			Reader newReader = new Reader(firstName, lastName, address);
-			
-			try {
-				addReaderFormService.addReader(newReader);
-				readerTableChangedCallback.readerTableChanged();
-			} catch (DatabaseUnavailableException e) {
-				JOptionPane.showMessageDialog(this,
-						"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-						"B³¹d",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			setVisible(false);
-		}
-	}
-	
-	private boolean validateData(String firstName, String lastName, String street, int houseNumber, Integer apartmentNumber, String zipCode, String city) {
-		return !firstName.equals("") &&
-				!lastName.equals("") &&
-				!street.equals("") &&
-				houseNumber > 0 &&
-				(apartmentNumber == null || apartmentNumber > 0) &&
-				!zipCode.equals("") &&
-				!city.equals("");
-	}
-	
+		
 	public void display() {
 		setLocationRelativeTo(parentFrame);
 		firstNameField.setText("");
@@ -201,5 +129,41 @@ public class AddReaderForm extends JDialog implements ActionListener {
 		cityField.setText("");
 		setVisible(true);
 		firstNameField.requestFocusInWindow();
+	}
+
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+
+	public JTextField getFirstNameField() {
+		return firstNameField;
+	}
+
+	public JTextField getLastNameField() {
+		return lastNameField;
+	}
+
+	public JTextField getStreetField() {
+		return streetField;
+	}
+
+	public JTextField getHouseNumberField() {
+		return houseNumberField;
+	}
+
+	public JTextField getApartmentNumberField() {
+		return apartmentNumberField;
+	}
+
+	public JTextField getZipCodeField() {
+		return zipCodeField;
+	}
+
+	public JTextField getCityField() {
+		return cityField;
 	}
 }

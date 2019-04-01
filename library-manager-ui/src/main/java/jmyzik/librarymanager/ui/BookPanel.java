@@ -1,21 +1,18 @@
 package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import jmyzik.librarymanager.domain.Book;
-
-public class BookTablePanel extends JPanel {
+public class BookPanel extends JPanel {
 
 	private BookTableModel tableModel;
 	private JTable table;
 
-	public BookTablePanel() {
+	public BookPanel() {
 		initalizeVariables();
 		setUpTable();
 		constructLayout();
@@ -45,16 +42,12 @@ public class BookTablePanel extends JPanel {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
-	
-	public void displayBooks(List<Book> bookList) {
-		tableModel.setBookList(bookList);
-		tableModel.fireTableDataChanged();
+
+	public BookTableModel getTableModel() {
+		return tableModel;
 	}
 
-	public Book getSelectedBook() {
-		int row = table.getSelectedRow();
-		if (row == -1) return null;
-		row = table.convertRowIndexToModel(row);
-		return tableModel.getBook(row);
+	public JTable getTable() {
+		return table;
 	}
 }
