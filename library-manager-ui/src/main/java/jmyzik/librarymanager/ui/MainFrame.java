@@ -47,7 +47,6 @@ public class MainFrame extends JFrame {
 		setMinimumSize(new Dimension(400, 200));
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setLocationRelativeTo(null);
-		setVisible(true);
 	}
 
 	private void constructLayout() {

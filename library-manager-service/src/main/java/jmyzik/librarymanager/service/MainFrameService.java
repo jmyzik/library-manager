@@ -4,7 +4,6 @@ import java.util.List;
 
 import jmyzik.librarymanager.dao.BooksDAO;
 import jmyzik.librarymanager.dao.ConnectionManager;
-import jmyzik.librarymanager.dao.GenericDAO;
 import jmyzik.librarymanager.dao.ReadersDAO;
 import jmyzik.librarymanager.dao.TransactionsDAO;
 import jmyzik.librarymanager.domain.Book;

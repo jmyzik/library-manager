@@ -12,6 +12,7 @@
 		<module>library-manager-ui</module>
 		<module>library-manager-util</module>
 		<module>library-manager-controller</module>
+		<module>library-manager-app</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
