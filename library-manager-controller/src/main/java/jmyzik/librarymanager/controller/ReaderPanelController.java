@@ -1,5 +1,6 @@
 package jmyzik.librarymanager.controller;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ReaderPanelController {
 	private JTable readerTable;
 	private JTable borrowedBooksTable;
 	private JLabel nameLabel;
+	private JButton borrowButton;
 	private JButton returnButton;
 	
 	public ReaderPanelController(ReaderPanel readerPanel) {
@@ -40,14 +42,14 @@ public class ReaderPanelController {
 		readerTable = readerPanel.getReaderTable();
 		borrowedBooksTable = readerPanel.getBorrowedBooksTable();
 		nameLabel = readerPanel.getNameLabel();
+		borrowButton = readerPanel.getBorrowButton();
 		returnButton = readerPanel.getReturnButton();
-
-		addListeners();
 	}
 	
-	private void addListeners() {
+	public void addListeners(ActionListener listener) {
 		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
-		returnButton.addActionListener(e -> returnSelectedBook());
+		returnButton.addActionListener(listener);
+		borrowButton.addActionListener(listener);
 	}
 	
 	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
@@ -92,7 +94,7 @@ public class ReaderPanelController {
 				JOptionPane.ERROR_MESSAGE);			
 	}
 	
-	private void returnSelectedBook() {
+	public void returnSelectedBook() {
 		BorrowTransaction transaction = getSelectedTransaction();
 		
 		if (transaction == null) {
@@ -115,7 +117,7 @@ public class ReaderPanelController {
 	public void updateBorrowedBooksTable() {
 		Reader reader = getSelectedReader();
 		if (reader == null) {
-			nameLabel.setText("");
+			nameLabel.setText("Imiê i nazwisko");
 			displayTransactions(new ArrayList<BorrowTransaction>());
 			return;
 		}

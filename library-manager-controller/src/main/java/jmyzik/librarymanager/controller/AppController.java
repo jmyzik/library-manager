@@ -54,6 +54,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	
 	private void addListeners() {
 		appMenuBarController.addListeners(this);
+		readerPanelController.addListeners(this);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -83,6 +84,10 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			removeSelectedReader();
 		} else if (menuItem.equals(Actions.CLOSE_APP.actionName())) {
 			closeApp();
+		} else if (menuItem.equals(Actions.BORROW_BOOK.actionName())) {
+			borrowBook();
+		} else if (menuItem.equals(Actions.RETURN_BOOK.actionName())) {
+			readerPanelController.returnSelectedBook();
 		}
 	}
 	

@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import jmyzik.librarymanager.enums.Actions;
+
 public class ReaderPanel extends JPanel {
 
 	private ReaderTableModel readerTableModel;
@@ -25,6 +27,7 @@ public class ReaderPanel extends JPanel {
 
 	public ReaderPanel() {
 		initalizeVariables();
+		defineActions();
 		setUpReaderTable();
 		setUpBorrowedBooksTable();
 		constructLayout();
@@ -41,6 +44,11 @@ public class ReaderPanel extends JPanel {
 		editButton = new JButton("Edytuj dane");
 		borrowButton = new JButton("Wypo¿ycz ksi¹¿kê");
 		returnButton = new JButton("Zwróæ ksi¹¿kê");
+	}
+	
+	private void defineActions() {
+		borrowButton.setActionCommand(Actions.BORROW_BOOK.actionName());
+		returnButton.setActionCommand(Actions.RETURN_BOOK.actionName());
 	}
 	
 	private void setUpReaderTable() {
@@ -99,6 +107,10 @@ public class ReaderPanel extends JPanel {
 
 	public JTable getBorrowedBooksTable() {
 		return borrowedBooksTable;
+	}
+
+	public JButton getBorrowButton() {
+		return borrowButton;
 	}
 
 	public JButton getReturnButton() {
