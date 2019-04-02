@@ -1,5 +1,7 @@
 package jmyzik.librarymanager.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
@@ -14,23 +16,27 @@ import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
+import jmyzik.librarymanager.enums.Actions;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.service.MainFrameService;
+import jmyzik.librarymanager.ui.AppMenuBar;
 import jmyzik.librarymanager.ui.BookPanel;
 import jmyzik.librarymanager.ui.MainFrame;
 import jmyzik.librarymanager.ui.ReaderPanel;
 
-public class AppController implements BookTableChangedCallback, ReaderTableChangedCallback {
+public class AppController implements ActionListener, BookTableChangedCallback, ReaderTableChangedCallback {
 	
 	private MainFrame mainFrame;
 	
 	private MainFrameService mainFrameService;
 	
+	private AppMenuBarController appMenuBarController;
 	private BookPanelController bookPanelController;
 	private ReaderPanelController readerPanelController;
 	private AddBookFormController addBookFormController;
 	private AddReaderFormController addReaderFormController;
 	
+	private AppMenuBar appMenuBar;
 	private BookPanel bookPanel;
 	private ReaderPanel readerPanel;
 	private JButton refreshButton;
@@ -39,11 +45,13 @@ public class AppController implements BookTableChangedCallback, ReaderTableChang
 	public AppController(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		mainFrameService = new MainFrameService();
+		appMenuBarController = new AppMenuBarController(mainFrame.getAppMenuBar());
 		bookPanelController = new BookPanelController(mainFrame.getBookPanel());
 		readerPanelController = new ReaderPanelController(mainFrame.getReaderPanel());
 		addBookFormController = new AddBookFormController(mainFrame.getAddBookForm());
 		addReaderFormController = new AddReaderFormController(mainFrame.getAddReaderForm());
 
+		appMenuBar = mainFrame.getAppMenuBar();
 		bookPanel = mainFrame.getBookPanel();
 		readerPanel = mainFrame.getReaderPanel();
 		refreshButton = mainFrame.getRefreshButton();
@@ -54,6 +62,7 @@ public class AppController implements BookTableChangedCallback, ReaderTableChang
 	}
 	
 	private void addListeners() {
+		appMenuBarController.addListeners(this);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -71,6 +80,22 @@ public class AppController implements BookTableChangedCallback, ReaderTableChang
 	}
 	
 	@Override
+	public void actionPerformed(ActionEvent e) {
+		String menuItem = e.getActionCommand();
+		if (menuItem.equals(Actions.ADD_BOOK.actionName())) {
+			addBookFormController.displayForm();
+		} else if (menuItem.equals(Actions.ADD_READER.actionName())) {
+			addReaderFormController.displayForm();
+		} else if (menuItem.equals(Actions.REMOVE_BOOK.actionName())) {
+			removeSelectedBook();
+		} else if (menuItem.equals(Actions.REMOVE_READER.actionName())) {
+			removeSelectedReader();
+		} else if (menuItem.equals(Actions.CLOSE_APP.actionName())) {
+			closeApp();
+		}
+	}
+	
+	@Override
 	public void bookTableChanged() {
 		updateBookTable();
 	}
@@ -78,7 +103,7 @@ public class AppController implements BookTableChangedCallback, ReaderTableChang
 	@Override
 	public void readerTableChanged() {
 		updateReaderTable();
-	}
+	}	
 
 	private void updateBookTable() {
 		List<Book> bookList = new ArrayList<Book>();

@@ -6,16 +6,13 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import jmyzik.librarymanager.enums.Actions;
-
 public class MainFrame extends JFrame {
 
+	private AppMenuBar appMenuBar;
 	private JPanel buttonPanel;
 	private JButton refreshButton;
 	private JButton borrowButton;
@@ -34,6 +31,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initializeVariables() {
+		appMenuBar = new AppMenuBar();
 		buttonPanel = new JPanel();
 		refreshButton = new JButton("Odœwie¿");
 		borrowButton = new JButton("Wypo¿ycz");
@@ -53,7 +51,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void constructLayout() {
-		setJMenuBar(createMenuBar());
+		setJMenuBar(appMenuBar);
 
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonPanel.add(refreshButton);
@@ -67,30 +65,8 @@ public class MainFrame extends JFrame {
 		add(tabbedPane, BorderLayout.CENTER);
 	}
 
-	private JMenuBar createMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
-
-		JMenu menuFile = new JMenu("Plik");
-		JMenuItem menuItemAddBook = new JMenuItem("Dodaj ksi¹¿kê...");
-		menuItemAddBook.setActionCommand(Actions.ADD_BOOK.actionName());
-		menuFile.add(menuItemAddBook);
-		JMenuItem menuItemAddReader = new JMenuItem("Dodaj czytelnika...");
-		menuItemAddReader.setActionCommand(Actions.ADD_READER.actionName());
-		menuFile.add(menuItemAddReader);
-		JMenuItem menuItemRemoveBook = new JMenuItem("Usuñ ksi¹¿kê");
-		menuItemRemoveBook.setActionCommand(Actions.REMOVE_BOOK.actionName());
-		menuFile.add(menuItemRemoveBook);
-		JMenuItem menuItemRemoveReader = new JMenuItem("Usuñ czytelnika");
-		menuItemRemoveReader.setActionCommand(Actions.REMOVE_READER.actionName());
-//		menuItemRemoveReader.addActionListener(e -> removeSelectedReader());
-		menuFile.add(menuItemRemoveReader);
-		JMenuItem menuItemExit = new JMenuItem("WyjdŸ");
-//		menuItemExit.addActionListener(e -> closeApp());
-		menuFile.add(menuItemExit);
-
-		menuBar.add(menuFile);
-
-		return menuBar;
+	public AppMenuBar getAppMenuBar() {
+		return appMenuBar;
 	}
 
 	public BookPanel getBookPanel() {

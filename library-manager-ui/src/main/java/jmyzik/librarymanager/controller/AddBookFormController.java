@@ -50,7 +50,11 @@ public class AddBookFormController {
 	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
 		this.bookTableChangedCallback = bookTableChangedCallback;
 	}
-
+	
+	public void displayForm() {
+		addBookForm.display();
+	}
+	
 	private void onCancelClicked() {
 		addBookForm.setVisible(false);		
 	}

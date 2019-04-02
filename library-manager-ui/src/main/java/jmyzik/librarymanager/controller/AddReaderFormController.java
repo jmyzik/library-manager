@@ -56,6 +56,10 @@ public class AddReaderFormController {
 		this.readerTableChangedCallback = readerTableChangedCallback;
 	}	
 
+	public void displayForm() {
+		addReaderForm.display();
+	}
+	
 	private void onCancelClicked() {
 		addReaderForm.setVisible(false);		
 	}
