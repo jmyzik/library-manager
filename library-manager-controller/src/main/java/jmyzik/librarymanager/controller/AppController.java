@@ -7,9 +7,11 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
@@ -102,21 +104,61 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	}	
 
 	private void updateBookTable() {
-		List<Book> bookList = new ArrayList<Book>();
-		try {
-			bookList = mainFrameService.getAllBooks();
-		} catch (DatabaseUnavailableException e) {
-			showDatabaseUnavailableMessage();		} 
-		bookPanelController.displayBooks(bookList);
+		SwingWorker<List<Book>, Object> worker = new SwingWorker<List<Book>, Object>() {
+			@Override
+			protected List<Book> doInBackground() throws Exception {
+				List<Book> bookList = new ArrayList<Book>();
+				try {
+					bookList = mainFrameService.getAllBooks();
+				} catch (DatabaseUnavailableException e) {
+					showDatabaseUnavailableMessage();
+				}
+				return bookList;
+			}
+
+			@Override
+			protected void done() {
+				try {
+					bookPanelController.displayBooks(get());
+				} catch (InterruptedException | ExecutionException e) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy ksi¹¿ek.",
+							"B³¹d",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}			
+		};
+
+		worker.execute();
 	}
 
 	private void updateReaderTable() {
-		List<Reader> readerList = new ArrayList<Reader>();
-		try {
-			readerList = mainFrameService.getAllReaders();
-		} catch (DatabaseUnavailableException e) {
-			showDatabaseUnavailableMessage();		} 
-		readerPanelController.displayReaders(readerList);
+		SwingWorker<List<Reader>, Object> worker = new SwingWorker<List<Reader>, Object>() {
+			@Override
+			protected List<Reader> doInBackground() throws Exception {
+				List<Reader> readerList = new ArrayList<Reader>();
+				try {
+					readerList = mainFrameService.getAllReaders();
+				} catch (DatabaseUnavailableException e) {
+					showDatabaseUnavailableMessage();
+				}
+				return readerList;
+			}
+
+			@Override
+			protected void done() {
+				try {
+					readerPanelController.displayReaders(get());
+				} catch (InterruptedException | ExecutionException e) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy czytelników.",
+							"B³¹d",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}			
+		};
+
+		worker.execute();
 	}
 
 	private void showDatabaseUnavailableMessage() {
