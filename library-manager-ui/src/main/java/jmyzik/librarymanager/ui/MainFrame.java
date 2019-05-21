@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -38,6 +37,7 @@ public class MainFrame extends JFrame {
 		tabbedPane = new JTabbedPane();
 		bookPanel = new BookPanel();
 		readerPanel = new ReaderPanel();
+		
 		addBookForm = new AddBookForm(this);
 		addReaderForm = new AddReaderForm(this);
 	}
@@ -63,7 +63,7 @@ public class MainFrame extends JFrame {
 		add(buttonPanel, BorderLayout.PAGE_START);
 		add(tabbedPane, BorderLayout.CENTER);
 	}
-
+	
 	public AppMenuBar getAppMenuBar() {
 		return appMenuBar;
 	}

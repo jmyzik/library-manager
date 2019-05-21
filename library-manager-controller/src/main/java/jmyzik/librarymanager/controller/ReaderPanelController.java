@@ -124,7 +124,7 @@ public class ReaderPanelController {
 			return;
 		}
 		
-		SwingWorker<List<BorrowTransaction>, Object> worker = new SwingWorker<List<BorrowTransaction>, Object>() {
+		SwingWorker<List<BorrowTransaction>, Void> worker = new SwingWorker<List<BorrowTransaction>, Void>() {
 			@Override
 			protected List<BorrowTransaction> doInBackground() throws Exception {
 				List<BorrowTransaction> transactionList = new ArrayList<BorrowTransaction>();

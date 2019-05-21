@@ -104,7 +104,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	}	
 
 	private void updateBookTable() {
-		SwingWorker<List<Book>, Object> worker = new SwingWorker<List<Book>, Object>() {
+		SwingWorker<List<Book>, Void> worker = new SwingWorker<List<Book>, Void>() {
 			@Override
 			protected List<Book> doInBackground() throws Exception {
 				List<Book> bookList = new ArrayList<Book>();
@@ -133,7 +133,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	}
 
 	private void updateReaderTable() {
-		SwingWorker<List<Reader>, Object> worker = new SwingWorker<List<Reader>, Object>() {
+		SwingWorker<List<Reader>, Void> worker = new SwingWorker<List<Reader>, Void>() {
 			@Override
 			protected List<Reader> doInBackground() throws Exception {
 				List<Reader> readerList = new ArrayList<Reader>();
