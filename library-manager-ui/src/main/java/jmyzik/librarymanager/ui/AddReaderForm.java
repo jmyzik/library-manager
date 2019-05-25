@@ -44,8 +44,8 @@ public class AddReaderForm extends JDialog {
 
 		this.parentFrame = parentFrame;
 		initializeVariables();
+		setupWindow();
 		constructLayout();
-		setWindow();
 	}
 
 	private void initializeVariables() {
@@ -68,6 +68,12 @@ public class AddReaderForm extends JDialog {
 		cityField = new JTextField(15);
 	}
 	
+	private void setupWindow() {
+		setSize(350, 350);
+		setResizable(false);
+		setLocationRelativeTo(parentFrame);
+	}
+		
 	private void constructLayout() {
 
 		JPanel bookInfoPanel = new JPanel();
@@ -112,12 +118,6 @@ public class AddReaderForm extends JDialog {
 		add(buttonsPanel, BorderLayout.PAGE_END);
 	}
 
-	private void setWindow() {
-		setSize(350, 350);
-		setResizable(false);
-		setLocationRelativeTo(parentFrame);
-	}
-		
 	public void display() {
 		setLocationRelativeTo(parentFrame);
 		firstNameField.setText("");

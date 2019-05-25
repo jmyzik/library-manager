@@ -40,8 +40,8 @@ public class AddBookForm extends JDialog {
 
 		this.parentFrame = parentFrame;
 		initializeVariables();
+		setupWindow();
 		constructLayout();
-		setWindow();
 	}
 
 	private void initializeVariables() {
@@ -58,6 +58,12 @@ public class AddBookForm extends JDialog {
 		publicationYearField = new JTextField(15);
 		copiesLabel = new JLabel("Liczba egzemplarzy");
 		copiesField = new JTextField(15);
+	}
+	
+	private void setupWindow() {
+		setSize(350, 280);
+		setResizable(false);
+		setLocationRelativeTo(parentFrame);
 	}
 	
 	private void constructLayout() {
@@ -104,12 +110,6 @@ public class AddBookForm extends JDialog {
 		add(buttonsPanel, BorderLayout.PAGE_END);
 	}
 
-	private void setWindow() {
-		setSize(350, 280);
-		setResizable(false);
-		setLocationRelativeTo(parentFrame);
-	}
-	
 	public void display() {
 		setLocationRelativeTo(parentFrame);
 		titleField.setText("");

@@ -64,13 +64,20 @@ public class ReaderPanel extends JPanel {
 		borrowedBooksTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		borrowedBooksTable.setFillsViewportHeight(true);
 		borrowedBooksTable.setAutoCreateRowSorter(true);
-//		setBorrowedBooksTableTableColumnWidths();
+		setBorrowedBooksTableColumnWidths();
 	}
 
 	private void setReaderTableColumnWidths() {
 		int[] widths = { 40, 100, 140, 320 };
 		for (int i = 0; i < widths.length; i++) {
 			readerTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
+		}
+	}
+	
+	private void setBorrowedBooksTableColumnWidths() {
+		int[] widths = { 140, 100, 80, 80 };
+		for (int i = 0; i < widths.length; i++) {
+			borrowedBooksTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
 		}
 	}
 	

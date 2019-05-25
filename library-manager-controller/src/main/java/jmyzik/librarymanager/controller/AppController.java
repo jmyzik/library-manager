@@ -75,20 +75,20 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String menuItem = e.getActionCommand();
-		if (menuItem.equals(Actions.ADD_BOOK.actionName())) {
+		String command = e.getActionCommand();
+		if (command.equals(Actions.ADD_BOOK.actionName())) {
 			addBookFormController.displayForm();
-		} else if (menuItem.equals(Actions.ADD_READER.actionName())) {
+		} else if (command.equals(Actions.ADD_READER.actionName())) {
 			addReaderFormController.displayForm();
-		} else if (menuItem.equals(Actions.REMOVE_BOOK.actionName())) {
+		} else if (command.equals(Actions.REMOVE_BOOK.actionName())) {
 			removeSelectedBook();
-		} else if (menuItem.equals(Actions.REMOVE_READER.actionName())) {
+		} else if (command.equals(Actions.REMOVE_READER.actionName())) {
 			removeSelectedReader();
-		} else if (menuItem.equals(Actions.CLOSE_APP.actionName())) {
+		} else if (command.equals(Actions.CLOSE_APP.actionName())) {
 			closeApp();
-		} else if (menuItem.equals(Actions.BORROW_BOOK.actionName())) {
+		} else if (command.equals(Actions.BORROW_BOOK.actionName())) {
 			borrowBook();
-		} else if (menuItem.equals(Actions.RETURN_BOOK.actionName())) {
+		} else if (command.equals(Actions.RETURN_BOOK.actionName())) {
 			readerPanelController.returnSelectedBook();
 		}
 	}
@@ -121,6 +121,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 				try {
 					bookPanelController.displayBooks(get());
 				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(mainFrame,
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy ksi¹¿ek.",
 							"B³¹d",
@@ -150,6 +151,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 				try {
 					readerPanelController.displayReaders(get());
 				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(mainFrame,
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy czytelników.",
 							"B³¹d",
@@ -209,7 +211,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			try {
 				success = mainFrameService.removeBook(book);
 			} catch (DatabaseUnavailableException e) {
-				showDatabaseUnavailableMessage();			} 
+				showDatabaseUnavailableMessage();
+			} 
 			if (success) {
 				updateBookTable();
 			} else {
@@ -235,8 +238,12 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		String[] options = { "Tak", "Nie" };
 		int result = JOptionPane.showOptionDialog(mainFrame,
 				"Czy na pewno chcesz usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych?",
-				"PotwierdŸ usuniêcie czytelnika", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-				options, options[0]);
+				"PotwierdŸ usuniêcie czytelnika",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
 			boolean success = false;
 			try {
@@ -261,11 +268,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			updateReaderTable();
 			readerPanelController.updateBorrowedBooksTable();
 		} else {
-			JOptionPane.showMessageDialog(mainFrame,
-					"Nie uda³o siê nawi¹zaæ po³¹czenia z baz¹ danych.\n" +
-					"Zamknij wszystkie aplikacje, które mog¹ korzystaæ z bazy, i kliknij przycisk \"Odœwie¿\"",
-					"B³¹d",
-					JOptionPane.ERROR_MESSAGE);
+			showDatabaseUnavailableMessage();
 		}
 	}
 	

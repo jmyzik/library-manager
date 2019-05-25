@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		super("Library Manager");
 		initializeVariables();
-		constructAppWindow();
+		setupAppWindow();
 		constructLayout();
 	}
 
@@ -42,7 +42,7 @@ public class MainFrame extends JFrame {
 		addReaderForm = new AddReaderForm(this);
 	}
 
-	private void constructAppWindow() {
+	private void setupAppWindow() {
 		setSize(600, 400);
 		setMinimumSize(new Dimension(400, 200));
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

@@ -141,6 +141,7 @@ public class ReaderPanelController {
 				try {
 					displayTransactions(get());
 				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(readerPanel,
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy wypo¿yczonych ksi¹¿ek.",
 							"B³¹d",
