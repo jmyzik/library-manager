@@ -1,5 +1,6 @@
 package jmyzik.librarymanager.controller;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -7,6 +8,7 @@ import javax.swing.JTextField;
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
+import jmyzik.librarymanager.model.EntityManagerHandler;
 import jmyzik.librarymanager.service.AddBookFormService;
 import jmyzik.librarymanager.ui.AddBookForm;
 
@@ -83,14 +85,20 @@ public class AddBookFormController {
 
 		Book newBook = new Book(title, author, publisher, publicationYear, copies);
 
+		EntityManager em = null;
 		try {
-			addBookFormService.addBook(newBook);
+			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			addBookFormService.addBook(newBook, em);
 			bookTableChangedCallback.bookTableChanged();
-		} catch (DatabaseUnavailableException e) {
-			JOptionPane.showMessageDialog(addBookForm,
-					"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-					"B³¹d",
-					JOptionPane.ERROR_MESSAGE);
+//		} catch (DatabaseUnavailableException e) {
+//			JOptionPane.showMessageDialog(addBookForm,
+//					"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+//					"B³¹d",
+//					JOptionPane.ERROR_MESSAGE);
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		addBookForm.setVisible(false);
 	}

@@ -2,6 +2,9 @@ package jmyzik.librarymanager.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
 import jmyzik.librarymanager.dao.BooksDAO;
 import jmyzik.librarymanager.dao.ConnectionManager;
 import jmyzik.librarymanager.dao.ReadersDAO;
@@ -25,30 +28,60 @@ public class MainFrameService {
 		connectionManager = new ConnectionManager();
 	}
 	
-	public List<Book> getAllBooks() throws DatabaseUnavailableException {
-		return booksDAO.getAllBooks();
+	public List<Book> getAllBooks(EntityManager em) {
+		return booksDAO.getAllBooks(em);
 	}
 	
-	public List<Reader> getAllReaders() throws DatabaseUnavailableException {
-		return readersDAO.getAllReaders();
+	public List<Reader> getAllReaders(EntityManager em) {
+		return readersDAO.getAllReaders(em);
 	}
 	
-	public boolean removeBook(Book book) throws DatabaseUnavailableException {
-		return booksDAO.removeBook(book);
+	public boolean removeBook(Book book, EntityManager em) {
+		EntityTransaction trans = em.getTransaction();
+		if (!trans.isActive()) {
+			trans.begin();
+		}
+		if (booksDAO.removeBook(book, em)) {
+			trans.commit();
+			return true;
+		} else {
+			trans.rollback();
+			return false;
+		}
 	}
 
-	public boolean removeReader(Reader reader) throws DatabaseUnavailableException {
-		return readersDAO.removeReader(reader);
+	public boolean removeReader(Reader reader, EntityManager em) {
+		EntityTransaction trans = em.getTransaction();
+		if (!trans.isActive()) {
+			trans.begin();
+		}
+		if (readersDAO.removeReader(reader, em)) {
+			trans.commit();
+			return true;
+		} else {
+			trans.rollback();
+			return false;
+		}
 	}
 
-	public boolean borrowBook(BorrowTransaction transaction) throws DatabaseUnavailableException {
+	public boolean borrowBook(BorrowTransaction transaction, EntityManager em) {
 		Book book = transaction.getBook();
 		int copies = book.getCopies();
 		if (copies < 1) return false;
+
+		EntityTransaction trans = em.getTransaction();
+		if (!trans.isActive()) {
+			trans.begin();
+		}
+		transactionsDAO.addTransaction(transaction, em);
 		book.setCopies(--copies);
-		if (!booksDAO.modifyBook(book)) return false;
-		transactionsDAO.addTransaction(transaction);
-		return true;
+		if (booksDAO.modifyBook(book, em)) {
+			trans.commit();
+			return true;
+		} else {
+			trans.rollback();
+			return false;
+		}
 	}
 
 	public boolean restartConnection() {

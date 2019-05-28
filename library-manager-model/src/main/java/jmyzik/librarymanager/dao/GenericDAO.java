@@ -7,11 +7,11 @@ public abstract class GenericDAO {
 
 	protected EntityManagerHandler entityManagerHandler = EntityManagerHandler.INSTANCE;
 	
-	public void open() throws DatabaseUnavailableException {
-		if (entityManagerHandler.isAvailable()) {
-			entityManagerHandler.open();
-		} else {
-			throw new DatabaseUnavailableException();
-		}
-	}
+//	public void open() throws DatabaseUnavailableException {
+//		if (entityManagerHandler.isAvailable()) {
+//			entityManagerHandler.open();
+//		} else {
+//			throw new DatabaseUnavailableException();
+//		}
+//	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
+import jmyzik.librarymanager.model.EntityManagerHandler;
 import jmyzik.librarymanager.service.ReaderPanelService;
 import jmyzik.librarymanager.ui.BorrowedBooksTableModel;
 import jmyzik.librarymanager.ui.ReaderPanel;
@@ -107,12 +108,18 @@ public class ReaderPanelController {
 			return;
 		}
 
+		EntityManager em = null;
 		try {
-			readerPanelService.returnBook(transaction);
+			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			readerPanelService.returnBook(transaction, em);
 			updateBorrowedBooksTable();
 			bookTableChangedCallback.bookTableChanged();
-		} catch (DatabaseUnavailableException e) {
-			showDatabaseUnavailableMessage();
+//		} catch (DatabaseUnavailableException e) {
+//			showDatabaseUnavailableMessage();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 	}
 	
@@ -125,14 +132,17 @@ public class ReaderPanelController {
 		}
 		
 		SwingWorker<List<BorrowTransaction>, Void> worker = new SwingWorker<List<BorrowTransaction>, Void>() {
+			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			
 			@Override
 			protected List<BorrowTransaction> doInBackground() throws Exception {
+				
 				List<BorrowTransaction> transactionList = new ArrayList<BorrowTransaction>();
-				try {
-					transactionList = readerPanelService.getAllTransactions(reader);
-				} catch (DatabaseUnavailableException e) {
-					showDatabaseUnavailableMessage();
-				}
+//				try {
+					transactionList = readerPanelService.getAllTransactions(reader, em);
+//				} catch (DatabaseUnavailableException e) {
+//					showDatabaseUnavailableMessage();
+//				}
 				return transactionList;
 			}
 
@@ -146,6 +156,8 @@ public class ReaderPanelController {
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy wypo¿yczonych ksi¹¿ek.",
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
+				} finally {
+					em.close();
 				}
 				nameLabel.setText(reader.toString());
 			}			

@@ -2,7 +2,6 @@ package jmyzik.librarymanager.model;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import org.hibernate.service.spi.ServiceException;
@@ -11,19 +10,23 @@ public enum EntityManagerHandler {
 	INSTANCE;
 
 	private EntityManagerFactory entityManagerFactory;
-	private EntityManager entityManager;
-	private EntityTransaction entityTransaction;
+//	private EntityManager entityManager;
+//	private EntityTransaction entityTransaction;
 	private boolean isAvailable = false;
 
 	private EntityManagerHandler() {
 		connectToDatabase();
 	}
+	
+	public EntityManager getNewEntityManager() {
+		return entityManagerFactory.createEntityManager();
+	}
 
 	public boolean connectToDatabase() {
 		try {
 			entityManagerFactory = Persistence.createEntityManagerFactory("library-database");
-			entityManager = entityManagerFactory.createEntityManager();
-			entityTransaction = entityManager.getTransaction();
+//			entityManager = entityManagerFactory.createEntityManager();
+//			entityTransaction = entityManager.getTransaction();
 			isAvailable = true;
 		} catch (ServiceException e) {
 			isAvailable = false;
@@ -31,27 +34,27 @@ public enum EntityManagerHandler {
 		return isAvailable;
 	}
 	
-	public void open() {
-		if (!entityTransaction.isActive()) {
-			entityTransaction.begin();
-		}
-	}
+//	public void open() {
+//		if (!entityTransaction.isActive()) {
+//			entityTransaction.begin();
+//		}
+//	}
 
 	public void shutdown() {
-		if (entityTransaction.isActive()) {
-			entityTransaction.rollback();
-		}
-		entityManager.close();
+//		if (entityTransaction.isActive()) {
+//			entityTransaction.rollback();
+//		}
+//		entityManager.close();
 		entityManagerFactory.close();
 	}
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+//	public EntityManager getEntityManager() {
+//		return entityManager;
+//	}
 
-	public EntityTransaction getEntityTransaction() {
-		return entityTransaction;
-	}
+//	public EntityTransaction getEntityTransaction() {
+//		return entityTransaction;
+//	}
 
 	public boolean isAvailable() {
 		return isAvailable;

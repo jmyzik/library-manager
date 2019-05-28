@@ -2,6 +2,7 @@ package jmyzik.librarymanager.dao;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import jmyzik.librarymanager.domain.Reader;
@@ -9,24 +10,19 @@ import jmyzik.librarymanager.model.DatabaseUnavailableException;
 
 public class ReadersDAO extends GenericDAO {
 
-	public void addReader(Reader reader) throws DatabaseUnavailableException {
-		open();
-		entityManagerHandler.getEntityManager().persist(reader);
-		entityManagerHandler.getEntityTransaction().commit();
+	public void addReader(Reader reader, EntityManager em) {
+		em.persist(reader);
 	}
 	
-	public List<Reader> getAllReaders() throws DatabaseUnavailableException {
-		open();
-		TypedQuery<Reader> query = entityManagerHandler.getEntityManager().createQuery("SELECT r FROM Reader r", Reader.class);
+	public List<Reader> getAllReaders(EntityManager em) {
+		TypedQuery<Reader> query = em.createQuery("SELECT r FROM Reader r", Reader.class);
 		List<Reader> readerList = query.getResultList();
 		return readerList;
 	}
 
-	public boolean removeReader(Reader reader) throws DatabaseUnavailableException {
-		open();
-		if (entityManagerHandler.getEntityManager().contains(reader)) {
-			entityManagerHandler.getEntityManager().remove(reader);
-			entityManagerHandler.getEntityTransaction().commit();
+	public boolean removeReader(Reader reader, EntityManager em) {
+		if (em.contains(reader)) {
+			em.remove(reader);
 			return true;
 		}
 		return false;

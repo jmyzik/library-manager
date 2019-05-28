@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -20,6 +21,7 @@ import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.enums.Actions;
 import jmyzik.librarymanager.model.DatabaseUnavailableException;
+import jmyzik.librarymanager.model.EntityManagerHandler;
 import jmyzik.librarymanager.service.MainFrameService;
 import jmyzik.librarymanager.ui.MainFrame;
 
@@ -105,14 +107,16 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 	private void updateBookTable() {
 		SwingWorker<List<Book>, Void> worker = new SwingWorker<List<Book>, Void>() {
+			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			
 			@Override
 			protected List<Book> doInBackground() throws Exception {
 				List<Book> bookList = new ArrayList<Book>();
-				try {
-					bookList = mainFrameService.getAllBooks();
-				} catch (DatabaseUnavailableException e) {
-					showDatabaseUnavailableMessage();
-				}
+//				try {
+					bookList = mainFrameService.getAllBooks(em);
+//				} catch (DatabaseUnavailableException e) {
+//					showDatabaseUnavailableMessage();
+//				}
 				return bookList;
 			}
 
@@ -126,6 +130,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy ksi¹¿ek.",
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
+				} finally {
+					em.close();
 				}
 			}			
 		};
@@ -135,14 +141,16 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 	private void updateReaderTable() {
 		SwingWorker<List<Reader>, Void> worker = new SwingWorker<List<Reader>, Void>() {
+			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+
 			@Override
 			protected List<Reader> doInBackground() throws Exception {
 				List<Reader> readerList = new ArrayList<Reader>();
-				try {
-					readerList = mainFrameService.getAllReaders();
-				} catch (DatabaseUnavailableException e) {
-					showDatabaseUnavailableMessage();
-				}
+//				try {
+					readerList = mainFrameService.getAllReaders(em);
+//				} catch (DatabaseUnavailableException e) {
+//					showDatabaseUnavailableMessage();
+//				}
 				return readerList;
 			}
 
@@ -156,6 +164,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 							"Wyst¹pi³ b³¹d, nie uda³o siê wyœwietliæ listy czytelników.",
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
+				} finally {
+					em.close();
 				}
 			}			
 		};
@@ -208,11 +218,17 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
 			boolean success = false;
+			EntityManager em = null;
 			try {
-				success = mainFrameService.removeBook(book);
-			} catch (DatabaseUnavailableException e) {
-				showDatabaseUnavailableMessage();
-			} 
+				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+				success = mainFrameService.removeBook(book, em);
+//			} catch (DatabaseUnavailableException e) {
+//				showDatabaseUnavailableMessage();
+			} finally {
+				if (em != null) {
+					em.close();
+				}
+			}
 			if (success) {
 				updateBookTable();
 			} else {
@@ -246,11 +262,17 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 				options[0]);
 		if (result == JOptionPane.YES_OPTION) {
 			boolean success = false;
+			EntityManager em = null;
 			try {
-				success = mainFrameService.removeReader(reader);
-			} catch (DatabaseUnavailableException e) {
-				showDatabaseUnavailableMessage();
-			} 
+				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+				success = mainFrameService.removeReader(reader, em);
+//			} catch (DatabaseUnavailableException e) {
+//				showDatabaseUnavailableMessage();
+			} finally {
+				if (em != null) {
+					em.close();
+				}
+			}
 			if (success) {
 				updateReaderTable();
 			} else {
@@ -304,10 +326,16 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 		BorrowTransaction transaction = new BorrowTransaction(reader, book, borrowDate, returnDate);
 		boolean success = false;
+		EntityManager em = null;
 		try {
-			success = mainFrameService.borrowBook(transaction);
-		} catch (DatabaseUnavailableException e) {
-			showDatabaseUnavailableMessage();
+			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			success = mainFrameService.borrowBook(transaction, em);
+//		} catch (DatabaseUnavailableException e) {
+//			showDatabaseUnavailableMessage();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 		if (success) {
 			updateBookTable();
