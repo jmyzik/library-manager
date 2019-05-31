@@ -32,10 +32,12 @@ public class BooksDAO extends GenericDAO {
 	}
 
 	public boolean removeBook(Book book, EntityManager em) {
-		if (em.contains(book)) {			//TODO: It checks if the book is present in the persistence context, not in the db... Maybe replace it with a try block?
+		try {
+			book = em.find(Book.class, book.getId());
 			em.remove(book);
-			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 }

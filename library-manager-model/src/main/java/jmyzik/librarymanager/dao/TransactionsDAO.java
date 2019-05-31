@@ -23,8 +23,13 @@ public class TransactionsDAO extends GenericDAO {
 		return transactionList;
 	}
 
-	// TODO: removeBook() and removeReader() return a boolean, make it coherent!
-	public void removeTransaction(BorrowTransaction transaction, EntityManager em) {
-		em.remove(transaction);
+	public boolean removeTransaction(BorrowTransaction transaction, EntityManager em) {
+		try {
+			transaction = em.find(BorrowTransaction.class, transaction.getId());
+			em.remove(transaction);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -25,7 +25,7 @@ public class ReaderPanelService {
 		return transactionsDAO.getAllTransactions(reader, em);
 	}
 
-	public void returnBook(BorrowTransaction transaction, EntityManager em) {
+	public boolean returnBook(BorrowTransaction transaction, EntityManager em) {
 		Book book = transaction.getBook();
 		int copies = book.getCopies();
 
@@ -33,12 +33,17 @@ public class ReaderPanelService {
 		if (!trans.isActive()) {
 			trans.begin();
 		}
-		transactionsDAO.removeTransaction(transaction, em);
-		book.setCopies(++copies);
-		if (booksDAO.modifyBook(book, em)) {			// TODO: Do I need that? The changes will be persisted anyway...
-			trans.commit();
-		} else {
+		
+		if (!transactionsDAO.removeTransaction(transaction, em)) {			// Exceptions will be better than boolean return type...
 			trans.rollback();
+			return false;
 		}
+		book.setCopies(++copies);
+		if (!booksDAO.modifyBook(book, em)) {			// TODO: Do I need that? The changes will be persisted anyway...
+			trans.rollback();
+			return false;
+		}
+		trans.commit();
+		return true;
 	}
 }

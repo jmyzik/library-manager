@@ -108,18 +108,26 @@ public class ReaderPanelController {
 			return;
 		}
 
+		boolean success = false;
 		EntityManager em = null;
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
-			readerPanelService.returnBook(transaction, em);
-			updateBorrowedBooksTable();
-			bookTableChangedCallback.bookTableChanged();
+			success = readerPanelService.returnBook(transaction, em);
 //		} catch (DatabaseUnavailableException e) {
 //			showDatabaseUnavailableMessage();
 		} finally {
 			if (em != null) {
 				em.close();
 			}
+		}
+		if (success) {
+			updateBorrowedBooksTable();
+			bookTableChangedCallback.bookTableChanged();
+		} else {
+			JOptionPane.showMessageDialog(readerPanel,
+					"Wyst¹pi³ b³¹d, nie uda³o siê zwróciæ ksi¹¿ki.",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
