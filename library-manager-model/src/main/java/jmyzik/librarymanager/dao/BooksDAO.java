@@ -20,24 +20,12 @@ public class BooksDAO extends GenericDAO {
 		return bookList;
 	}
 
-	public boolean modifyBook(Book newBook, EntityManager em) {
-		Book book = em.find(Book.class, newBook.getId());
-		if (book == null) return false;
-		book.setTitle(newBook.getTitle());
-		book.setAuthor(newBook.getAuthor());
-		book.setPublisher(newBook.getPublisher());
-		book.setPublicationYear(newBook.getPublicationYear());
-		book.setCopies(newBook.getCopies());
-		return true;
+	public void modifyBook(Book newBook, EntityManager em) {
+		em.merge(newBook);
 	}
 
-	public boolean removeBook(Book book, EntityManager em) {
-		try {
-			book = em.find(Book.class, book.getId());
-			em.remove(book);
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-		return true;
+	public void removeBook(Book book, EntityManager em) {
+		book = em.find(Book.class, book.getId());
+		em.remove(book);
 	}
 }

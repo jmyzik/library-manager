@@ -23,13 +23,8 @@ public class TransactionsDAO extends GenericDAO {
 		return transactionList;
 	}
 
-	public boolean removeTransaction(BorrowTransaction transaction, EntityManager em) {
-		try {
-			transaction = em.find(BorrowTransaction.class, transaction.getId());
-			em.remove(transaction);
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-		return true;
+	public void removeTransaction(BorrowTransaction transaction, EntityManager em) {
+		transaction = em.find(BorrowTransaction.class, transaction.getId());
+		em.remove(transaction);
 	}
 }

@@ -113,8 +113,8 @@ public class ReaderPanelController {
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 			success = readerPanelService.returnBook(transaction, em);
-//		} catch (DatabaseUnavailableException e) {
-//			showDatabaseUnavailableMessage();
+		} catch (Exception e) {
+			success = false;
 		} finally {
 			if (em != null) {
 				em.close();

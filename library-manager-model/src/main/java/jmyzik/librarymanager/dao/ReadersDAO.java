@@ -20,13 +20,8 @@ public class ReadersDAO extends GenericDAO {
 		return readerList;
 	}
 
-	public boolean removeReader(Reader reader, EntityManager em) {
-		try {
-			reader = em.find(Reader.class, reader.getId());
-			em.remove(reader);
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-		return true;
+	public void removeReader(Reader reader, EntityManager em) {
+		reader = em.find(Reader.class, reader.getId());
+		em.remove(reader);
 	}
 }

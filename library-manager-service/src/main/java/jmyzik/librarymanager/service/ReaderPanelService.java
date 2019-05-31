@@ -33,13 +33,11 @@ public class ReaderPanelService {
 		if (!trans.isActive()) {
 			trans.begin();
 		}
-		
-		if (!transactionsDAO.removeTransaction(transaction, em)) {			// TODO: Exceptions will be better than boolean return type...
-			trans.rollback();
-			return false;
-		}
-		book.setCopies(++copies);
-		if (!booksDAO.modifyBook(book, em)) {			// TODO: Do I need that? The changes will be persisted anyway...
+		try {
+			transactionsDAO.removeTransaction(transaction, em);
+			book.setCopies(++copies);
+			booksDAO.modifyBook(book, em);
+		} catch (Exception e) {
 			trans.rollback();
 			return false;
 		}

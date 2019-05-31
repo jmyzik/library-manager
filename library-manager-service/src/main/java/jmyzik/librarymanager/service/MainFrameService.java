@@ -41,13 +41,14 @@ public class MainFrameService {
 		if (!trans.isActive()) {
 			trans.begin();
 		}
-		if (booksDAO.removeBook(book, em)) {
-			trans.commit();
-			return true;
-		} else {
+		try {
+			booksDAO.removeBook(book, em);
+		} catch (Exception e) {
 			trans.rollback();
 			return false;
 		}
+		trans.commit();
+		return true;
 	}
 
 	public boolean removeReader(Reader reader, EntityManager em) {
@@ -55,13 +56,14 @@ public class MainFrameService {
 		if (!trans.isActive()) {
 			trans.begin();
 		}
-		if (readersDAO.removeReader(reader, em)) {
-			trans.commit();
-			return true;
-		} else {
+		try {
+			readersDAO.removeReader(reader, em);
+		} catch (Exception e) {
 			trans.rollback();
 			return false;
 		}
+		trans.commit();
+		return true;
 	}
 
 	public boolean borrowBook(BorrowTransaction transaction, EntityManager em) {
@@ -73,15 +75,16 @@ public class MainFrameService {
 		if (!trans.isActive()) {
 			trans.begin();
 		}
-		transactionsDAO.addTransaction(transaction, em);
-		book.setCopies(--copies);
-		if (booksDAO.modifyBook(book, em)) {
-			trans.commit();
-			return true;
-		} else {
+		try {
+			transactionsDAO.addTransaction(transaction, em);
+			book.setCopies(--copies);
+			booksDAO.modifyBook(book, em);
+		} catch (Exception e) {
 			trans.rollback();
 			return false;
 		}
+		trans.commit();
+		return true;
 	}
 
 	public boolean restartConnection() {

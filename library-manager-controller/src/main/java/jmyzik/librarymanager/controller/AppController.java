@@ -20,7 +20,6 @@ import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.enums.Actions;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
 import jmyzik.librarymanager.service.MainFrameService;
 import jmyzik.librarymanager.ui.MainFrame;
@@ -222,8 +221,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 				success = mainFrameService.removeBook(book, em);
-//			} catch (DatabaseUnavailableException e) {
-//				showDatabaseUnavailableMessage();
+			} catch (Exception e) {
+				success = false;
 			} finally {
 				if (em != null) {
 					em.close();
@@ -266,8 +265,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 				success = mainFrameService.removeReader(reader, em);
-//			} catch (DatabaseUnavailableException e) {
-//				showDatabaseUnavailableMessage();
+			} catch (Exception e) {
+				success = false;
 			} finally {
 				if (em != null) {
 					em.close();
@@ -330,8 +329,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 			success = mainFrameService.borrowBook(transaction, em);
-//		} catch (DatabaseUnavailableException e) {
-//			showDatabaseUnavailableMessage();
+		} catch (Exception e) {
+			success = false;
 		} finally {
 			if (em != null) {
 				em.close();
