@@ -34,7 +34,7 @@ public class ReaderPanelService {
 			trans.begin();
 		}
 		
-		if (!transactionsDAO.removeTransaction(transaction, em)) {			// Exceptions will be better than boolean return type...
+		if (!transactionsDAO.removeTransaction(transaction, em)) {			// TODO: Exceptions will be better than boolean return type...
 			trans.rollback();
 			return false;
 		}
