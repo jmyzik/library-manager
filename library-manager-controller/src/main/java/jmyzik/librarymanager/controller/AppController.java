@@ -106,16 +106,17 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 	private void updateBookTable() {
 		SwingWorker<List<Book>, Void> worker = new SwingWorker<List<Book>, Void>() {
-			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			EntityManager em = null;
 			
 			@Override
 			protected List<Book> doInBackground() throws Exception {
 				List<Book> bookList = new ArrayList<Book>();
-//				try {
+				try {
+					em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 					bookList = mainFrameService.getAllBooks(em);
-//				} catch (DatabaseUnavailableException e) {
-//					showDatabaseUnavailableMessage();
-//				}
+				} catch (IllegalStateException e) {
+					showDatabaseUnavailableMessage();
+				}
 				return bookList;
 			}
 
@@ -130,7 +131,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
-					em.close();
+					if (em != null) {
+						em.close();
+					}
 				}
 			}			
 		};
@@ -140,16 +143,17 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 	private void updateReaderTable() {
 		SwingWorker<List<Reader>, Void> worker = new SwingWorker<List<Reader>, Void>() {
-			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			EntityManager em = null;
 
 			@Override
 			protected List<Reader> doInBackground() throws Exception {
 				List<Reader> readerList = new ArrayList<Reader>();
-//				try {
+				try {
+					em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 					readerList = mainFrameService.getAllReaders(em);
-//				} catch (DatabaseUnavailableException e) {
-//					showDatabaseUnavailableMessage();
-//				}
+				} catch (IllegalStateException e) {
+					showDatabaseUnavailableMessage();
+				}
 				return readerList;
 			}
 
@@ -164,7 +168,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
-					em.close();
+					if (em != null) {
+						em.close();
+					}
 				}
 			}			
 		};
@@ -221,6 +227,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 				success = mainFrameService.removeBook(book, em);
+			} catch (IllegalStateException e) {
+				success = false;
+				showDatabaseUnavailableMessage();
 			} catch (Exception e) {
 				success = false;
 			} finally {
@@ -265,6 +274,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 				success = mainFrameService.removeReader(reader, em);
+			} catch (IllegalStateException e) {
+				success = false;
+				showDatabaseUnavailableMessage();
 			} catch (Exception e) {
 				success = false;
 			} finally {
@@ -329,6 +341,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 			success = mainFrameService.borrowBook(transaction, em);
+		} catch (IllegalStateException e) {
+			success = false;
+			showDatabaseUnavailableMessage();
 		} catch (Exception e) {
 			success = false;
 		} finally {

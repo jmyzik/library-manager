@@ -10,8 +10,6 @@ public enum EntityManagerHandler {
 	INSTANCE;
 
 	private EntityManagerFactory entityManagerFactory;
-//	private EntityManager entityManager;
-//	private EntityTransaction entityTransaction;
 	private boolean isAvailable = false;
 
 	private EntityManagerHandler() {
@@ -24,9 +22,8 @@ public enum EntityManagerHandler {
 
 	public boolean connectToDatabase() {
 		try {
+			shutdown();
 			entityManagerFactory = Persistence.createEntityManagerFactory("library-database");
-//			entityManager = entityManagerFactory.createEntityManager();
-//			entityTransaction = entityManager.getTransaction();
 			isAvailable = true;
 		} catch (ServiceException e) {
 			isAvailable = false;
@@ -34,27 +31,11 @@ public enum EntityManagerHandler {
 		return isAvailable;
 	}
 	
-//	public void open() {
-//		if (!entityTransaction.isActive()) {
-//			entityTransaction.begin();
-//		}
-//	}
-
 	public void shutdown() {
-//		if (entityTransaction.isActive()) {
-//			entityTransaction.rollback();
-//		}
-//		entityManager.close();
-		entityManagerFactory.close();
+		if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
+			entityManagerFactory.close();
+		}
 	}
-
-//	public EntityManager getEntityManager() {
-//		return entityManager;
-//	}
-
-//	public EntityTransaction getEntityTransaction() {
-//		return entityTransaction;
-//	}
 
 	public boolean isAvailable() {
 		return isAvailable;

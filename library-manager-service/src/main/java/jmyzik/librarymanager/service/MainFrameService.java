@@ -6,26 +6,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import jmyzik.librarymanager.dao.BooksDAO;
-import jmyzik.librarymanager.dao.ConnectionManager;
 import jmyzik.librarymanager.dao.ReadersDAO;
 import jmyzik.librarymanager.dao.TransactionsDAO;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
+import jmyzik.librarymanager.model.EntityManagerHandler;
 
 public class MainFrameService {
 	
 	private BooksDAO booksDAO;
 	private ReadersDAO readersDAO;
 	private TransactionsDAO transactionsDAO;
-	private ConnectionManager connectionManager;
-	
+	private EntityManagerHandler entityManagerHandler;
+
 	public MainFrameService() {
 		booksDAO = new BooksDAO();
 		readersDAO = new ReadersDAO();
 		transactionsDAO = new TransactionsDAO();
-		connectionManager = new ConnectionManager();
+		entityManagerHandler = EntityManagerHandler.INSTANCE;
 	}
 	
 	public List<Book> getAllBooks(EntityManager em) {
@@ -88,10 +87,10 @@ public class MainFrameService {
 	}
 
 	public boolean restartConnection() {
-		return connectionManager.restartConnection();
+		return entityManagerHandler.connectToDatabase();
 	}
 	
 	public void shutdownDatabase() {
-		connectionManager.shutdown();
+		entityManagerHandler.shutdown();
 	}
 }

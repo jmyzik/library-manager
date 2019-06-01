@@ -113,6 +113,9 @@ public class ReaderPanelController {
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 			success = readerPanelService.returnBook(transaction, em);
+		} catch (IllegalStateException e) {
+			success = false;
+			showDatabaseUnavailableMessage();
 		} catch (Exception e) {
 			success = false;
 		} finally {
@@ -140,17 +143,17 @@ public class ReaderPanelController {
 		}
 		
 		SwingWorker<List<BorrowTransaction>, Void> worker = new SwingWorker<List<BorrowTransaction>, Void>() {
-			EntityManager em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			EntityManager em = null;
 			
 			@Override
 			protected List<BorrowTransaction> doInBackground() throws Exception {
-				
 				List<BorrowTransaction> transactionList = new ArrayList<BorrowTransaction>();
-//				try {
+				try {
+					em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 					transactionList = readerPanelService.getAllTransactions(reader, em);
-//				} catch (DatabaseUnavailableException e) {
-//					showDatabaseUnavailableMessage();
-//				}
+				} catch (IllegalStateException e) {
+					showDatabaseUnavailableMessage();
+				}
 				return transactionList;
 			}
 
@@ -165,7 +168,9 @@ public class ReaderPanelController {
 							"B³¹d",
 							JOptionPane.ERROR_MESSAGE);
 				} finally {
-					em.close();
+					if (em != null) {
+						em.close();
+					}
 				}
 				nameLabel.setText(reader.toString());
 			}			

@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Address;
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
 import jmyzik.librarymanager.model.EntityManagerHandler;
 import jmyzik.librarymanager.service.AddReaderFormService;
 import jmyzik.librarymanager.ui.AddReaderForm;
@@ -98,11 +97,11 @@ public class AddReaderFormController {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
 			addReaderFormService.addReader(newReader, em);
 			readerTableChangedCallback.readerTableChanged();
-//		} catch (DatabaseUnavailableException e) {
-//			JOptionPane.showMessageDialog(addReaderForm,
-//					"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
-//					"B³¹d",
-//					JOptionPane.ERROR_MESSAGE);
+		} catch (IllegalStateException e) {
+			JOptionPane.showMessageDialog(addReaderForm,
+					"Wyst¹pi³ problem z baz¹ danych, zmiany nie zosta³y wprowadzone",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
 		} finally {
 			if (em != null) {
 				em.close();

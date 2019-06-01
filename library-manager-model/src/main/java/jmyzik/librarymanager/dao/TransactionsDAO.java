@@ -7,9 +7,8 @@ import javax.persistence.TypedQuery;
 
 import jmyzik.librarymanager.domain.BorrowTransaction;
 import jmyzik.librarymanager.domain.Reader;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
 
-public class TransactionsDAO extends GenericDAO {
+public class TransactionsDAO {
 	
 	public void addTransaction(BorrowTransaction transaction, EntityManager em) {
 		em.persist(transaction);

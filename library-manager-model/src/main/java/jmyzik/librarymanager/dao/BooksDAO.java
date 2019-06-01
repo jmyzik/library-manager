@@ -6,9 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import jmyzik.librarymanager.domain.Book;
-import jmyzik.librarymanager.model.DatabaseUnavailableException;
 
-public class BooksDAO extends GenericDAO {
+public class BooksDAO {
 
 	public void addBook(Book book, EntityManager em) {
 		em.persist(book);
