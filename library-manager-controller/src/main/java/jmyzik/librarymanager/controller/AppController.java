@@ -226,6 +226,14 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			EntityManager em = null;
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+				if (!mainFrameService.canBookBeRemoved(book, em)) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"Nie mo¿na usun¹æ ksi¹¿ki \"" + book.getTitle() + "\" z bazy danych.\n" + 
+									"Co najmniej jeden egzemplarz ksi¹¿ki jest obecnie wypo¿yczony",
+							"B³¹d",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				success = mainFrameService.removeBook(book, em);
 			} catch (IllegalStateException e) {
 				success = false;
@@ -273,6 +281,14 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			EntityManager em = null;
 			try {
 				em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+				if (!mainFrameService.canReaderBeRemoved(reader, em)) {
+					JOptionPane.showMessageDialog(mainFrame,
+							"Nie mo¿na usun¹æ czytelnika " + reader.getFirstName() + " " + reader.getLastName() + " z bazy danych.\n" + 
+									"Czytelnik ma niezwrócone ksi¹¿ki.",
+							"B³¹d",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				success = mainFrameService.removeReader(reader, em);
 			} catch (IllegalStateException e) {
 				success = false;

@@ -93,4 +93,22 @@ public class MainFrameService {
 	public void shutdownDatabase() {
 		entityManagerHandler.shutdown();
 	}
+
+	public boolean canBookBeRemoved(Book book, EntityManager em) {
+		List<BorrowTransaction> transactions = transactionsDAO.getAllTransactionsForBook(book, em);
+		if (transactions.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean canReaderBeRemoved(Reader reader, EntityManager em) {
+		List<BorrowTransaction> transactions = transactionsDAO.getAllTransactionsForReader(reader, em);
+		if (transactions.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

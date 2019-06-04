@@ -22,7 +22,7 @@ public class ReaderPanelService {
 	}
 	
 	public List<BorrowTransaction> getAllTransactions(Reader reader, EntityManager em) {
-		return transactionsDAO.getAllTransactions(reader, em);
+		return transactionsDAO.getAllTransactionsForReader(reader, em);
 	}
 
 	public boolean returnBook(BorrowTransaction transaction, EntityManager em) {
