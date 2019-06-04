@@ -7,9 +7,14 @@ Technologies used:
 * H2 database (embedded)
 * Maven
 
-The project is in initial stage (displays a list of books and readers, enables the user to add and delete books and readers).
+Current functionality:
+* Display the list of books and readers
+* Display the list of books borrowed by a given reader
+* Add readers and books to the database
+* Remove readers and books from the database
+* Borrow and return books
 
 How I plan to develop the project:
-* normalize the database
-* fix some concurrency issues
-* enable readers to borrow and return books
+* Enable the user to edit book and reader data
+* Add transaction history for books and readers
+* Normalize the database

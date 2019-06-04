@@ -135,7 +135,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 						em.close();
 					}
 				}
-			}			
+			}
 		};
 
 		worker.execute();
