@@ -18,23 +18,25 @@ import javax.swing.border.Border;
 
 public class AddBookForm extends JDialog {
 
-	private JFrame parentFrame;
+	protected JFrame parentFrame;
 	
-	private JButton cancelButton;
-	private JButton saveButton;
-	
+	protected JButton cancelButton;
+	protected JButton saveButton;
+
+	protected JPanel bookInfoPanel;
+
 	private JLabel titleLabel;
 	private JLabel authorLabel;
 	private JLabel publisherLabel;
 	private JLabel publicationYearLabel;
 	private JLabel copiesLabel;
 	
-	private JTextField titleField;
-	private JTextField authorField;
-	private JTextField publisherField;
-	private JTextField publicationYearField;
-	private JTextField copiesField;
-		
+	protected JTextField titleField;
+	protected JTextField authorField;
+	protected JTextField publisherField;
+	protected JTextField publicationYearField;
+	protected JTextField copiesField;
+			
 	public AddBookForm(JFrame parentFrame) {
 		super(parentFrame, "Dodaj ksi¹¿kê", true);
 
@@ -48,6 +50,8 @@ public class AddBookForm extends JDialog {
 		cancelButton = new JButton("Anuluj");
 		saveButton = new JButton("Zapisz");
 	
+		bookInfoPanel = new JPanel();
+		
 		titleLabel = new JLabel("Tytu³");
 		titleField = new JTextField(15);
 		authorLabel = new JLabel("Autor");
@@ -68,7 +72,6 @@ public class AddBookForm extends JDialog {
 	
 	private void constructLayout() {
 
-		JPanel bookInfoPanel = new JPanel();
 		JPanel buttonsPanel = new JPanel();
 		
 		JLabel[] labels = new JLabel[] {titleLabel, authorLabel, publisherLabel, publicationYearLabel, copiesLabel};

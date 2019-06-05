@@ -19,6 +19,10 @@ public class ReadersDAO {
 		return readerList;
 	}
 
+	public void modifyReader(Reader newReader, EntityManager em) {
+		em.merge(newReader);
+	}
+
 	public void removeReader(Reader reader, EntityManager em) {
 		reader = em.find(Reader.class, reader.getId());
 		em.remove(reader);

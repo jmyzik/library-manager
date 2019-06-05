@@ -20,7 +20,9 @@ public class MainFrame extends JFrame {
 	private ReaderPanel readerPanel;
 
 	private AddBookForm addBookForm;
+	private EditBookForm editBookForm;
 	private AddReaderForm addReaderForm;
+	private EditReaderForm editReaderForm;
 
 	public MainFrame() {
 		super("Library Manager");
@@ -39,7 +41,9 @@ public class MainFrame extends JFrame {
 		readerPanel = new ReaderPanel();
 		
 		addBookForm = new AddBookForm(this);
+		editBookForm = new EditBookForm(this);
 		addReaderForm = new AddReaderForm(this);
+		editReaderForm = new EditReaderForm(this);
 	}
 
 	private void setupAppWindow() {
@@ -80,10 +84,18 @@ public class MainFrame extends JFrame {
 		return addBookForm;
 	}
 
+	public EditBookForm getEditBookForm() {
+		return editBookForm;
+	}
+	
 	public AddReaderForm getAddReaderForm() {
 		return addReaderForm;
 	}
 
+	public EditReaderForm getEditReaderForm() {
+		return editReaderForm;
+	}
+	
 	public JButton getRefreshButton() {
 		return refreshButton;
 	}

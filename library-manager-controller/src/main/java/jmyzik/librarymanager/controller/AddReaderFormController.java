@@ -9,13 +9,13 @@ import jmyzik.librarymanager.callbacks.ReaderTableChangedCallback;
 import jmyzik.librarymanager.domain.Address;
 import jmyzik.librarymanager.domain.Reader;
 import jmyzik.librarymanager.model.EntityManagerHandler;
-import jmyzik.librarymanager.service.AddReaderFormService;
+import jmyzik.librarymanager.service.ReaderFormService;
 import jmyzik.librarymanager.ui.AddReaderForm;
 
 public class AddReaderFormController {
 	
 	private AddReaderForm addReaderForm;
-	private AddReaderFormService addReaderFormService;
+	private ReaderFormService readerFormService;
 	private ReaderTableChangedCallback readerTableChangedCallback;
 	
 	private JButton cancelButton;
@@ -30,7 +30,7 @@ public class AddReaderFormController {
 	
 	public AddReaderFormController(AddReaderForm addReaderForm) {
 		this.addReaderForm = addReaderForm;
-		addReaderFormService = new AddReaderFormService();
+		readerFormService = new ReaderFormService();
 
 		cancelButton = addReaderForm.getCancelButton();
 		saveButton = addReaderForm.getSaveButton();
@@ -95,7 +95,7 @@ public class AddReaderFormController {
 		EntityManager em = null;
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
-			addReaderFormService.addReader(newReader, em);
+			readerFormService.addReader(newReader, em);
 			readerTableChangedCallback.readerTableChanged();
 		} catch (IllegalStateException e) {
 			JOptionPane.showMessageDialog(addReaderForm,

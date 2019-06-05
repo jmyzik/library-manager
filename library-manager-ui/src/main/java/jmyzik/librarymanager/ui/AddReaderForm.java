@@ -18,10 +18,12 @@ import javax.swing.border.Border;
 
 public class AddReaderForm extends JDialog {
 
-	private JFrame parentFrame;
+	protected JFrame parentFrame;
 	
-	private JButton cancelButton;
-	private JButton saveButton;
+	protected JButton cancelButton;
+	protected JButton saveButton;
+	
+	protected JPanel readerInfoPanel;
 	
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
@@ -31,13 +33,13 @@ public class AddReaderForm extends JDialog {
 	private JLabel zipCodeLabel;
 	private JLabel cityLabel;
 	
-	private JTextField firstNameField;
-	private JTextField lastNameField;
-	private JTextField streetField;
-	private JTextField houseNumberField;
-	private JTextField apartmentNumberField;
-	private JTextField zipCodeField;
-	private JTextField cityField;
+	protected JTextField firstNameField;
+	protected JTextField lastNameField;
+	protected JTextField streetField;
+	protected JTextField houseNumberField;
+	protected JTextField apartmentNumberField;
+	protected JTextField zipCodeField;
+	protected JTextField cityField;
 	
 	public AddReaderForm(JFrame parentFrame) {
 		super(parentFrame, "Dodaj czytelnika", true);
@@ -51,6 +53,8 @@ public class AddReaderForm extends JDialog {
 	private void initializeVariables() {
 		cancelButton = new JButton("Anuluj");
 		saveButton = new JButton("Zapisz");
+		
+		readerInfoPanel = new JPanel();
 
 		firstNameLabel = new JLabel("Imiê");
 		firstNameField = new JTextField(15);
@@ -76,7 +80,6 @@ public class AddReaderForm extends JDialog {
 		
 	private void constructLayout() {
 
-		JPanel bookInfoPanel = new JPanel();
 		JPanel buttonsPanel = new JPanel();
 		
 		JLabel[] labels = new JLabel[] { firstNameLabel, lastNameLabel, streetLabel, houseNumberLabel, apartmentNumberLabel, zipCodeLabel, cityLabel };
@@ -85,9 +88,9 @@ public class AddReaderForm extends JDialog {
 		int space = 15;
 		Border spaceBorder = BorderFactory.createEmptyBorder(space, space, space, space);
 		Border titleBorder = BorderFactory.createTitledBorder("Dodaj nowego czytelnika");
-		bookInfoPanel.setBorder(BorderFactory.createCompoundBorder(spaceBorder, titleBorder));
+		readerInfoPanel.setBorder(BorderFactory.createCompoundBorder(spaceBorder, titleBorder));
 
-		bookInfoPanel.setLayout(new GridBagLayout());
+		readerInfoPanel.setLayout(new GridBagLayout());
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 1;
@@ -101,12 +104,12 @@ public class AddReaderForm extends JDialog {
 			gc.gridx = 0;
 			gc.anchor = GridBagConstraints.EAST;
 			gc.insets = rightPadding;
-			bookInfoPanel.add(labels[i], gc);
+			readerInfoPanel.add(labels[i], gc);
 
 			gc.gridx = 1;
 			gc.anchor = GridBagConstraints.WEST;
 			gc.insets = noPadding;
-			bookInfoPanel.add(textFields[i], gc);			
+			readerInfoPanel.add(textFields[i], gc);			
 		}
 
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -114,7 +117,7 @@ public class AddReaderForm extends JDialog {
 		buttonsPanel.add(cancelButton);
 
 		setLayout(new BorderLayout());
-		add(bookInfoPanel, BorderLayout.CENTER);
+		add(readerInfoPanel, BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.PAGE_END);
 	}
 

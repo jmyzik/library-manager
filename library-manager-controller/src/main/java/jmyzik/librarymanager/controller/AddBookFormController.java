@@ -8,13 +8,13 @@ import javax.swing.JTextField;
 import jmyzik.librarymanager.callbacks.BookTableChangedCallback;
 import jmyzik.librarymanager.domain.Book;
 import jmyzik.librarymanager.model.EntityManagerHandler;
-import jmyzik.librarymanager.service.AddBookFormService;
+import jmyzik.librarymanager.service.BookFormService;
 import jmyzik.librarymanager.ui.AddBookForm;
 
 public class AddBookFormController {
 
 	private AddBookForm addBookForm;
-	private AddBookFormService addBookFormService;
+	private BookFormService bookFormService;
 	private BookTableChangedCallback bookTableChangedCallback;
 	
 	private JButton cancelButton;
@@ -27,7 +27,7 @@ public class AddBookFormController {
 	
 	public AddBookFormController(AddBookForm addBookForm) {
 		this.addBookForm = addBookForm;
-		addBookFormService = new AddBookFormService();
+		bookFormService = new BookFormService();
 
 		cancelButton = addBookForm.getCancelButton();
 		saveButton = addBookForm.getSaveButton();
@@ -87,7 +87,7 @@ public class AddBookFormController {
 		EntityManager em = null;
 		try {
 			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
-			addBookFormService.addBook(newBook, em);
+			bookFormService.addBook(newBook, em);
 			bookTableChangedCallback.bookTableChanged();
 		} catch (IllegalStateException e) {
 			JOptionPane.showMessageDialog(addBookForm,
@@ -102,7 +102,7 @@ public class AddBookFormController {
 		addBookForm.setVisible(false);
 	}
 	
-	private boolean validateData(String title, String author, String publisher, int publicationYear, int copies) {
+	protected boolean validateData(String title, String author, String publisher, int publicationYear, int copies) {
 		return !title.equals("") &&
 				!author.equals("") &&
 				!publisher.equals("") &&

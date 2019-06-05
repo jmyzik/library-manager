@@ -35,6 +35,8 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	private ReaderPanelController readerPanelController;
 	private AddBookFormController addBookFormController;
 	private AddReaderFormController addReaderFormController;
+	private EditBookFormController editBookFormController;
+	private EditReaderFormController editReaderFormController;
 	
 	private JButton refreshButton;
 	private JButton borrowButton;
@@ -47,7 +49,9 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		readerPanelController = new ReaderPanelController(mainFrame.getReaderPanel());
 		addBookFormController = new AddBookFormController(mainFrame.getAddBookForm());
 		addReaderFormController = new AddReaderFormController(mainFrame.getAddReaderForm());
-
+		editBookFormController = new EditBookFormController(mainFrame.getEditBookForm());
+		editReaderFormController = new EditReaderFormController(mainFrame.getEditReaderForm());
+		
 		refreshButton = mainFrame.getRefreshButton();
 		borrowButton = mainFrame.getBorrowButton();
 		
@@ -70,23 +74,29 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 
 	private void setCallbacks() {
 		addBookFormController.setBookTableChangedCallback(this);
+		editBookFormController.setBookTableChangedCallback(this);
 		addReaderFormController.setReaderTableChangedCallback(this);
+		editReaderFormController.setReaderTableChangedCallback(this);
 		readerPanelController.setBookTableChangedCallback(this);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
-		if (command.equals(Actions.ADD_BOOK.actionName())) {
+		if (command.equals(Actions.CLOSE_APP.actionName())) {
+		closeApp();
+		} else if (command.equals(Actions.ADD_BOOK.actionName())) {
 			addBookFormController.displayForm();
-		} else if (command.equals(Actions.ADD_READER.actionName())) {
-			addReaderFormController.displayForm();
+		} else if (command.equals(Actions.EDIT_BOOK.actionName())) {
+			editSelectedBook();
 		} else if (command.equals(Actions.REMOVE_BOOK.actionName())) {
 			removeSelectedBook();
+		} else if (command.equals(Actions.ADD_READER.actionName())) {
+			addReaderFormController.displayForm();
+		} else if (command.equals(Actions.EDIT_READER.actionName())) {
+			editSelectedReader();
 		} else if (command.equals(Actions.REMOVE_READER.actionName())) {
 			removeSelectedReader();
-		} else if (command.equals(Actions.CLOSE_APP.actionName())) {
-			closeApp();
 		} else if (command.equals(Actions.BORROW_BOOK.actionName())) {
 			borrowBook();
 		} else if (command.equals(Actions.RETURN_BOOK.actionName())) {
@@ -376,5 +386,31 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 					"B³¹d",
 					JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private void editSelectedBook() {
+		Book book = bookPanelController.getSelectedBook();
+		if (book == null) {
+			JOptionPane.showMessageDialog(mainFrame,
+					"Zaznacz ksi¹¿kê, któr¹ chcesz edytowaæ",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		
+		editBookFormController.displayForm(book);
+	}
+	
+	private void editSelectedReader() {
+		Reader reader = readerPanelController.getSelectedReader();
+		if (reader == null) {
+			JOptionPane.showMessageDialog(mainFrame,
+					"Zaznacz czytelnika, którego dane chcesz edytowaæ",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		
+		editReaderFormController.displayForm(reader);
 	}
 }
