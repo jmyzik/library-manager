@@ -47,6 +47,7 @@ public class ReaderPanel extends JPanel {
 	}
 	
 	private void defineActions() {
+		editButton.setActionCommand(Actions.EDIT_READER.actionName());
 		borrowButton.setActionCommand(Actions.BORROW_BOOK.actionName());
 		returnButton.setActionCommand(Actions.RETURN_BOOK.actionName());
 	}
@@ -114,6 +115,10 @@ public class ReaderPanel extends JPanel {
 
 	public JTable getBorrowedBooksTable() {
 		return borrowedBooksTable;
+	}
+	
+	public JButton getEditButton() {
+		return editButton;
 	}
 
 	public JButton getBorrowButton() {

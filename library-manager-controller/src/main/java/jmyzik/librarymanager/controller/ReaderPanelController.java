@@ -33,6 +33,7 @@ public class ReaderPanelController {
 	private JTable readerTable;
 	private JTable borrowedBooksTable;
 	private JLabel nameLabel;
+	private JButton editButton;
 	private JButton borrowButton;
 	private JButton returnButton;
 	
@@ -45,12 +46,14 @@ public class ReaderPanelController {
 		readerTable = readerPanel.getReaderTable();
 		borrowedBooksTable = readerPanel.getBorrowedBooksTable();
 		nameLabel = readerPanel.getNameLabel();
+		editButton = readerPanel.getEditButton();
 		borrowButton = readerPanel.getBorrowButton();
 		returnButton = readerPanel.getReturnButton();
 	}
 	
 	public void addListeners(ActionListener listener) {
 		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
+		editButton.addActionListener(listener);
 		returnButton.addActionListener(listener);
 		borrowButton.addActionListener(listener);
 	}
