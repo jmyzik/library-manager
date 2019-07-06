@@ -1,6 +1,7 @@
 package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -9,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 import jmyzik.librarymanager.enums.Actions;
 
@@ -87,6 +89,9 @@ public class BookPanel extends JPanel {
 		add(new JScrollPane(bookTable));
 
 		detailsPanel.setLayout(new BorderLayout(10, 5));
+
+		titleLabel.setFont(new Font("Arial", Font.BOLD,14));
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		detailsPanel.add(titleLabel, BorderLayout.PAGE_START);
 		detailsPanel.add(new JScrollPane(borrowersTable), BorderLayout.CENTER);
 		buttonPanel.setLayout(new GridLayout(0, 1, 0, 10));

@@ -14,7 +14,6 @@ public class MainFrame extends JFrame {
 	private AppMenuBar appMenuBar;
 	private JPanel buttonPanel;
 	private JButton refreshButton;
-	private JButton borrowButton;
 	private JTabbedPane tabbedPane;
 	private BookPanel bookPanel;
 	private ReaderPanel readerPanel;
@@ -35,7 +34,6 @@ public class MainFrame extends JFrame {
 		appMenuBar = new AppMenuBar();
 		buttonPanel = new JPanel();
 		refreshButton = new JButton("Odœwie¿");
-		borrowButton = new JButton("Wypo¿ycz");
 		tabbedPane = new JTabbedPane();
 		bookPanel = new BookPanel();
 		readerPanel = new ReaderPanel();
@@ -58,7 +56,6 @@ public class MainFrame extends JFrame {
 
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonPanel.add(refreshButton);
-		buttonPanel.add(borrowButton);
 		
 		tabbedPane.addTab("Ksi¹¿ki", bookPanel);
 		tabbedPane.addTab("Czytelnicy", readerPanel);
@@ -98,9 +95,5 @@ public class MainFrame extends JFrame {
 	
 	public JButton getRefreshButton() {
 		return refreshButton;
-	}
-
-	public JButton getBorrowButton() {
-		return borrowButton;
 	}
 }

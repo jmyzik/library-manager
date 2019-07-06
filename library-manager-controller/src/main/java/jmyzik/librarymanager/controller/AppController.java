@@ -39,7 +39,6 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	private EditReaderFormController editReaderFormController;
 	
 	private JButton refreshButton;
-	private JButton borrowButton;
 	
 	public AppController(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
@@ -53,7 +52,6 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		editReaderFormController = new EditReaderFormController(mainFrame.getEditReaderForm());
 		
 		refreshButton = mainFrame.getRefreshButton();
-		borrowButton = mainFrame.getBorrowButton();
 		
 		addListeners();
 		setCallbacks();
@@ -70,7 +68,6 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			}
 		});
 		refreshButton.addActionListener(e -> connectAndUpdate());
-		borrowButton.addActionListener(e -> borrowBook());
 	}
 
 	private void setCallbacks() {
