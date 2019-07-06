@@ -79,6 +79,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return String.format("\"%s\" autora %s", title, author);
+		return String.format("\"%s\" (%s)", title, author);
 	}
 }
