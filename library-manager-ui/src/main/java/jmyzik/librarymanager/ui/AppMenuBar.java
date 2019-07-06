@@ -8,7 +8,7 @@ import jmyzik.librarymanager.enums.Actions;
 
 public class AppMenuBar extends JMenuBar {
 	
-	private JMenu menuFile;
+	private JMenu menuApp;
 	private JMenuItem menuItemExit;
 
 	private JMenu menuBook;
@@ -28,7 +28,7 @@ public class AppMenuBar extends JMenuBar {
 	}
 	
 	private void initializeVariables() {
-		menuFile = new JMenu("Plik");
+		menuApp = new JMenu("Aplikacja");
 		menuItemExit = new JMenuItem("Wyjdü");
 
 		menuBook = new JMenu("Ksiπøka");
@@ -55,7 +55,7 @@ public class AppMenuBar extends JMenuBar {
 	}
 
 	private void constructMenu() {
-		menuFile.add(menuItemExit);
+		menuApp.add(menuItemExit);
 
 		menuBook.add(menuItemAddBook);
 		menuBook.add(menuItemEditBook);
@@ -65,7 +65,7 @@ public class AppMenuBar extends JMenuBar {
 		menuReader.add(menuItemEditReader);
 		menuReader.add(menuItemRemoveReader);
 
-		this.add(menuFile);
+		this.add(menuApp);
 		this.add(menuBook);
 		this.add(menuReader);
 	}

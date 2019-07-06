@@ -61,6 +61,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	
 	private void addListeners() {
 		appMenuBarController.addListeners(this);
+		bookPanelController.addListeners(this);
 		readerPanelController.addListeners(this);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -78,13 +79,14 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 		addReaderFormController.setReaderTableChangedCallback(this);
 		editReaderFormController.setReaderTableChangedCallback(this);
 		readerPanelController.setBookTableChangedCallback(this);
+		bookPanelController.setBookTableChangedCallback(this);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		if (command.equals(Actions.CLOSE_APP.actionName())) {
-		closeApp();
+			closeApp();
 		} else if (command.equals(Actions.ADD_BOOK.actionName())) {
 			addBookFormController.displayForm();
 		} else if (command.equals(Actions.EDIT_BOOK.actionName())) {
@@ -99,8 +101,6 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 			removeSelectedReader();
 		} else if (command.equals(Actions.BORROW_BOOK.actionName())) {
 			borrowBook();
-		} else if (command.equals(Actions.RETURN_BOOK.actionName())) {
-			readerPanelController.returnSelectedBook();
 		}
 	}
 	

@@ -54,7 +54,7 @@ public class ReaderPanelController {
 	public void addListeners(ActionListener listener) {
 		readerTable.getSelectionModel().addListSelectionListener(e -> readerSelected(e));
 		editButton.addActionListener(listener);
-		returnButton.addActionListener(listener);
+		returnButton.addActionListener(e -> returnSelectedBook());
 		borrowButton.addActionListener(listener);
 	}
 	

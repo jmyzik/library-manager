@@ -1,53 +1,131 @@
 package jmyzik.librarymanager.ui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import jmyzik.librarymanager.enums.Actions;
+
 public class BookPanel extends JPanel {
 
-	private BookTableModel tableModel;
-	private JTable table;
+	private BookTableModel bookTableModel;
+	private BorrowersTableModel borrowersTableModel;
+	private JTable bookTable;
+	private JPanel detailsPanel;
+	private JLabel titleLabel;
+	private JTable borrowersTable;
+	private JPanel buttonPanel;
+	private JButton editButton;
+	private JButton borrowButton;
+	private JButton returnButton;
 
 	public BookPanel() {
 		initalizeVariables();
-		setUpTable();
+		defineActions();
+		setUpBookTable();
+		setUpBorrowersTable();
 		constructLayout();
 	}
 
 	private void initalizeVariables() {
-		tableModel = new BookTableModel();
-		table = new JTable();
-	}
-
-	private void setUpTable() {
-		table.setModel(tableModel);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
-		table.setFillsViewportHeight(true);
-		table.setAutoCreateRowSorter(true);
-		setColumnWidths();
+		bookTableModel = new BookTableModel();
+		borrowersTableModel = new BorrowersTableModel();
+		bookTable = new JTable();
+		detailsPanel = new JPanel();
+		titleLabel = new JLabel("Tytu³");
+		borrowersTable = new JTable();
+		buttonPanel = new JPanel();
+		editButton = new JButton("Edytuj dane");
+		borrowButton = new JButton("Wypo¿ycz ksi¹¿kê");
+		returnButton = new JButton("Zwróæ ksi¹¿kê");
 	}
 	
-	private void setColumnWidths() {
+	private void defineActions() {
+		editButton.setActionCommand(Actions.EDIT_BOOK.actionName());
+		borrowButton.setActionCommand(Actions.BORROW_BOOK.actionName());
+		returnButton.setActionCommand(Actions.RETURN_BOOK.actionName());
+	}
+
+	private void setUpBookTable() {
+		bookTable.setModel(bookTableModel);
+		bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		bookTable.setFillsViewportHeight(true);
+		bookTable.setAutoCreateRowSorter(true);
+		setBookTableColumnWidths();
+	}
+	
+	private void setUpBorrowersTable() {
+		borrowersTable.setModel(borrowersTableModel);
+		borrowersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		borrowersTable.setFillsViewportHeight(true);
+		borrowersTable.setAutoCreateRowSorter(true);
+		setBorrowersTableColumnWidths();
+	}
+
+	private void setBookTableColumnWidths() {
 		int[] widths = { 40, 200, 160, 140, 80, 80 };
 		for (int i = 0; i < widths.length; i++) {
-			table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
+			bookTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
+		}
+	}
+	
+	private void setBorrowersTableColumnWidths() {
+		int[] widths = { 140, 130, 130 };
+		for (int i = 0; i < widths.length; i++) {
+			borrowersTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);			
 		}
 	}
 	
 	private void constructLayout() {
-		setLayout(new BorderLayout());
-		add(new JScrollPane(table), BorderLayout.CENTER);
+		setLayout(new GridLayout(2, 1, 0, 10));
+		add(new JScrollPane(bookTable));
+
+		detailsPanel.setLayout(new BorderLayout(10, 5));
+		detailsPanel.add(titleLabel, BorderLayout.PAGE_START);
+		detailsPanel.add(new JScrollPane(borrowersTable), BorderLayout.CENTER);
+		buttonPanel.setLayout(new GridLayout(0, 1, 0, 10));
+		buttonPanel.add(editButton);
+		buttonPanel.add(borrowButton);
+		buttonPanel.add(returnButton);
+		detailsPanel.add(buttonPanel, BorderLayout.LINE_END);
+		add(detailsPanel);
+	}
+	
+	public BookTableModel getBookTableModel() {
+		return bookTableModel;
 	}
 
-	public BookTableModel getTableModel() {
-		return tableModel;
+	public BorrowersTableModel getBorrowersTableModel() {
+		return borrowersTableModel;
 	}
 
-	public JTable getTable() {
-		return table;
+	public JTable getBookTable() {
+		return bookTable;
+	}
+	
+	public JLabel getTitleLabel() {
+		return titleLabel;
+	}
+
+	public JTable getBorrowersTable() {
+		return borrowersTable;
+	}
+	
+	public JButton getEditButton() {
+		return editButton;
+	}
+
+	public JButton getBorrowButton() {
+		return borrowButton;
+	}
+
+	public JButton getReturnButton() {
+		return returnButton;
 	}
 }
