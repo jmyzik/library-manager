@@ -36,6 +36,7 @@ public class ReaderPanelController {
 	private JButton editButton;
 	private JButton borrowButton;
 	private JButton returnButton;
+	private JButton prolongButton;
 	
 	public ReaderPanelController(ReaderPanel readerPanel) {
 		this.readerPanel = readerPanel;
@@ -49,6 +50,7 @@ public class ReaderPanelController {
 		editButton = readerPanel.getEditButton();
 		borrowButton = readerPanel.getBorrowButton();
 		returnButton = readerPanel.getReturnButton();
+		prolongButton = readerPanel.getProlongButton();
 	}
 	
 	public void addListeners(ActionListener listener) {
@@ -56,6 +58,7 @@ public class ReaderPanelController {
 		editButton.addActionListener(listener);
 		returnButton.addActionListener(e -> returnSelectedBook());
 		borrowButton.addActionListener(listener);
+		prolongButton.addActionListener(e -> prolongSelectedBook());
 	}
 	
 	public void setBookTableChangedCallback(BookTableChangedCallback bookTableChangedCallback) {
@@ -100,7 +103,7 @@ public class ReaderPanelController {
 				JOptionPane.ERROR_MESSAGE);			
 	}
 	
-	public void returnSelectedBook() {
+	private void returnSelectedBook() {
 		BorrowTransaction transaction = getSelectedTransaction();
 		
 		if (transaction == null) {
@@ -137,6 +140,42 @@ public class ReaderPanelController {
 		}
 	}
 	
+	private void prolongSelectedBook() {
+		BorrowTransaction transaction = getSelectedTransaction();
+		
+		if (transaction == null) {
+			JOptionPane.showMessageDialog(readerPanel,
+					"Zaznacz ksi¹¿kê, któr¹ chcesz prolongowaæ",
+					"Brak zaznaczenia",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		boolean success = false;
+		EntityManager em = null;
+		try {
+			em = EntityManagerHandler.INSTANCE.getNewEntityManager();
+			success = readerPanelService.prolongBook(transaction, em);
+		} catch (IllegalStateException e) {
+			success = false;
+			showDatabaseUnavailableMessage();
+		} catch (Exception e) {
+			success = false;
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+		if (success) {
+			updateBorrowedBooksTable();
+		} else {
+			JOptionPane.showMessageDialog(readerPanel,
+					"Wyst¹pi³ b³¹d, nie uda³o siê prolongowaæ ksi¹¿ki.",
+					"B³¹d",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	public void updateBorrowedBooksTable() {
 		Reader reader = getSelectedReader();
 		if (reader == null) {

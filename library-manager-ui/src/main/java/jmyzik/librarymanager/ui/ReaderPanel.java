@@ -26,6 +26,7 @@ public class ReaderPanel extends JPanel {
 	private JButton editButton;
 	private JButton borrowButton;
 	private JButton returnButton;
+	private JButton prolongButton;
 
 	public ReaderPanel() {
 		initalizeVariables();
@@ -46,12 +47,12 @@ public class ReaderPanel extends JPanel {
 		editButton = new JButton("Edytuj dane");
 		borrowButton = new JButton("Wypo¿ycz ksi¹¿kê");
 		returnButton = new JButton("Zwróæ ksi¹¿kê");
+		prolongButton = new JButton("Prolonguj");
 	}
 	
 	private void defineActions() {
 		editButton.setActionCommand(Actions.EDIT_READER.actionName());
 		borrowButton.setActionCommand(Actions.BORROW_BOOK.actionName());
-		returnButton.setActionCommand(Actions.RETURN_BOOK.actionName());
 	}
 	
 	private void setUpReaderTable() {
@@ -98,6 +99,7 @@ public class ReaderPanel extends JPanel {
 		buttonPanel.add(editButton);
 		buttonPanel.add(borrowButton);
 		buttonPanel.add(returnButton);
+		buttonPanel.add(prolongButton);
 		detailsPanel.add(buttonPanel, BorderLayout.LINE_END);
 		add(detailsPanel);
 	}
@@ -132,5 +134,9 @@ public class ReaderPanel extends JPanel {
 
 	public JButton getReturnButton() {
 		return returnButton;
+	}
+
+	public JButton getProlongButton() {
+		return prolongButton;
 	}
 }

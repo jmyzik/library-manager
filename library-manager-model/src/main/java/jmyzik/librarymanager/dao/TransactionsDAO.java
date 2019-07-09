@@ -35,4 +35,8 @@ public class TransactionsDAO {
 		transaction = em.find(BorrowTransaction.class, transaction.getId());
 		em.remove(transaction);
 	}
+
+	public void modifyTransaction(BorrowTransaction newTransaction, EntityManager em) {
+		em.merge(newTransaction);
+	}
 }

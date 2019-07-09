@@ -1,5 +1,6 @@
 package jmyzik.librarymanager.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -37,6 +38,24 @@ public class ReaderPanelService {
 			transactionsDAO.removeTransaction(transaction, em);
 			book.setCopies(++copies);
 			booksDAO.modifyBook(book, em);
+		} catch (Exception e) {
+			trans.rollback();
+			return false;
+		}
+		trans.commit();
+		return true;
+	}
+	
+	public boolean prolongBook(BorrowTransaction transaction, EntityManager em) {
+		LocalDate returnDate = transaction.getReturnDate();
+
+		EntityTransaction trans = em.getTransaction();
+		if (!trans.isActive()) {
+			trans.begin();
+		}
+		try {
+			transaction.setReturnDate(returnDate.plusDays(7));		// TODO enable the user to specify the date
+			transactionsDAO.modifyTransaction(transaction, em);
 		} catch (Exception e) {
 			trans.rollback();
 			return false;

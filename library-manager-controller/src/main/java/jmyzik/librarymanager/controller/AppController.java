@@ -109,7 +109,7 @@ public class AppController implements ActionListener, BookTableChangedCallback, 
 	@Override
 	public void readerTableChanged() {
 		updateReaderTable();
-	}	
+	}
 
 	private void updateBookTable() {
 		SwingWorker<List<Book>, Void> worker = new SwingWorker<List<Book>, Void>() {
