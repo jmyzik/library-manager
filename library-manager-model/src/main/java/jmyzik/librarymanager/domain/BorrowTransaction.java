@@ -8,11 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class BorrowTransaction {
-	@Id
-	@GeneratedValue
-	private long id;
+    @Id
+    @GeneratedValue(generator = "inc")
+    @GenericGenerator(name = "inc", strategy = "increment")
+    private long id;
 	@ManyToOne
 	private Reader borrower;
 	@ManyToOne
