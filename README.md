@@ -16,3 +16,10 @@ Current functionality:
 How I plan to develop the project:
 * Add transaction history for books and readers
 * Add unit tests
+
+Screenshots:
+![List of books](images/screenshot1.jpg)
+
+![List of readers](images/screenshot2.jpg)
+
+![Edit reader's data dialog](images/screenshot2.jpg)
