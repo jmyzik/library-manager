@@ -9,12 +9,10 @@ Technologies used:
 
 Current functionality:
 * Display the list of books and readers
-* Display the list of books borrowed by a given reader
-* Add readers and books to the database
-* Remove readers and books from the database
 * Borrow and return books
+* Display the list of books borrowed by a given reader and the list of readers who borrowed a given book
+* Add and delete readers and books, edit book and reader data
 
 How I plan to develop the project:
-* Enable the user to edit book and reader data
 * Add transaction history for books and readers
-* Normalize the database
+* Add unit tests
