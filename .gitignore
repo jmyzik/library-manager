@@ -1,2 +1,4 @@
-library_db.trace.db 
+library_db.trace.db
+*.iml
+.idea/
 target/

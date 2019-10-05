@@ -13,7 +13,7 @@
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:h2:../library-manager-model/src/main/resources/db/library_db" />
+				value="jdbc:h2:file:./resources/database/library_db" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.H2Dialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
