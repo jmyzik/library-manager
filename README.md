@@ -22,4 +22,4 @@ Screenshots:
 
 ![List of readers](images/screenshot2.jpg)
 
-![Edit reader's data dialog](images/screenshot2.jpg)
+![Edit reader's data dialog](images/screenshot3.jpg)
